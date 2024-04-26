@@ -46,10 +46,10 @@ public class GameTimer extends AnimationTimer{
 	public void handle(long currentNanoTime) {
 		this.gc.clearRect(0, 0, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
 		this.gc.drawImage(this.gs.getBG(), 0, 0);
-		renderItems();
-		renderMice();
 		moveMice();
 		checkCollisions();
+		renderItems();
+		renderMice();
 	}
 	
 	private void checkCollisions() {
@@ -58,27 +58,25 @@ public class GameTimer extends AnimationTimer{
 			Cheese newCheese = new Cheese(this.player.x, this.player.y + Mouse.MOUSE_SIZE/2, Mouse.MOUSE_SIZE/2);
 			newCheese.setPlayer(player);
 			this.acquiredCheese.add(newCheese);
-			System.out.println("Cheesed");
 		}
 		
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
-			System.out.println("Win");
 			this.stop();
 			this.menu.setStage();
 		}
 	}
 
-	// method that will render/draw the fishes to the canvas
+	// method that will render/draw the mice to the canvas
 	private void renderMice() {
-		for (Mouse m : this.mice){ // loop through fishes, if dead, add to fishes to remove
+		for (Mouse m : this.mice){ 
 			m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
 			m.render(this.gc);
 		}
 	}
 	
-	// method that will render/draw the fishes to the canvas
+	// method that will render/draw the mice to the canvas
 	private void renderItems() {
-		for (Sprite s : this.items){ // loop through fishes, if dead, add to fishes to remove
+		for (Sprite s : this.items){ 
 			s.loadImage(s.getImgStr(), Mouse.MOUSE_SIZE);
 			s.render(this.gc);
 		}
@@ -90,7 +88,7 @@ public class GameTimer extends AnimationTimer{
 		}
 	}
 	
-	// method that will render/draw the fishes to the canvas
+	// method that will render/draw the mice to the canvas
 	private void moveMice() {
 		for (Mouse m : this.mice){
 			if (this.checkBounds()) {
@@ -102,6 +100,32 @@ public class GameTimer extends AnimationTimer{
 					}
 					
 					m.x += m.dx * Mouse.MOUSE_SPEED;
+				}
+				
+				if(m.checkHasJumped()) {  
+					// TODO: edit this to stop sprite if it collides with any platform, not just the ground
+					if (m.getY() >= Mouse.INITIAL_Y && m.getDy() == 1) {
+						m.setHasJumped();
+						m.setDY(0);
+					} else {
+						if (m.getY() <= m.getYBeforeJump()-m.getMaxJumpHeight()){
+							m.setDY(1);	
+						}
+						m.y += m.dy * m.getJumpVelocity();
+
+						// increase jump velocity throughout jump
+						m.setJumpVelocity(m.getJumpVelocity() + (float)0.05);
+						
+					}
+				}
+				
+				else if (m.dy != 0 && !m.checkHasJumped()) {
+					m.setHasJumped();
+					m.setYBeforeJump();
+					m.setMaxJumpHeight(Mouse.MOUSE_SIZE * 2);
+					m.setJumpVelocity(Mouse.MOUSE_SPEED);
+					
+					m.y += m.dy * m.getJumpVelocity();
 				}
 			}
 		}
@@ -124,20 +148,18 @@ public class GameTimer extends AnimationTimer{
 
 	// method that will change dx and dy depending on the key pressed
 	private void movePlayer(KeyCode key) {
-		if(key==KeyCode.W) this.player.setDY(1);
+		if(key==KeyCode.W && !this.player.checkHasJumped()) this.player.setDY(-1);
 
 		if(key==KeyCode.A) this.player.setDX(-1);
 
-		if(key==KeyCode.S) this.player.setDY(-1);
+		//if(key==KeyCode.S) this.player.setDY(-1);
 
 		if(key==KeyCode.D) this.player.setDX(1);
    	}
 	
 	// method that will stop the player's movement; set the player's DX and DY to 0
 	private void stopPlayer(KeyCode key){
-		if (key==KeyCode.W || key==KeyCode.S) {
-			this.player.setDY(0);
-		} else {
+		if (key==KeyCode.A || key==KeyCode.D) {
 			this.player.setDX(0);
 		}
 	}

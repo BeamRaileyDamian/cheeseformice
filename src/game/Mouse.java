@@ -7,21 +7,34 @@ public class Mouse extends Sprite{
 	protected GraphicsContext gc;
 	protected String imgDirection;
 	protected int imgNum;
+	protected float jumpVelocity;
+	protected int maxJumpHeight;
 	
 	public final static int MOUSE_SIZE = 60;
-	public final static int MOUSE_SPEED = 3;
+	public final static int MOUSE_SPEED = 4;
+	
+	public final static int INITIAL_X = 50;
+	public final static int INITIAL_Y = GameStage.WINDOW_HEIGHT - 225;
 
 	public static final String RIGHT = "r";
 	public static final String LEFT = "l";
 	
 	private boolean withCheese;
+	
+	private boolean hasJumped;
+	private int yBeforeJump;
 
 	public Mouse() {
-		super(50, GameStage.WINDOW_HEIGHT - 225);
+		super(INITIAL_X, INITIAL_Y);
 		this.imgStr = "assets/mouse";
 		this.imgDirection = Mouse.RIGHT;
 		this.imgNum = 1;
 		this.withCheese = false;
+		this.maxJumpHeight = MOUSE_SIZE * 2;
+		this.jumpVelocity = MOUSE_SPEED;
+		
+		this.hasJumped = false;
+		this.yBeforeJump = INITIAL_Y;
 		
 		Canvas canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT); // open canvas with same size as stage
 		this.gc = canvas.getGraphicsContext2D();
@@ -33,8 +46,24 @@ public class Mouse extends Sprite{
 		return this.imgStr + "_" + this.imgNum + "_" + this.imgDirection + ".png";
 	}
 	
+	boolean checkHasJumped() {
+		return this.hasJumped;
+	}
+	
 	boolean checkWithCheese() {
 		return this.withCheese;
+	}
+	
+	int getYBeforeJump() {
+		return this.yBeforeJump;
+	}
+	
+	int getMaxJumpHeight() {
+		return this.maxJumpHeight;
+	}
+	
+	float getJumpVelocity() {
+		return this.jumpVelocity;
 	}
  	
 	// setters
@@ -44,5 +73,21 @@ public class Mouse extends Sprite{
 	
 	void setWithCheese() {
 		this.withCheese = true;
+	}
+	
+	void setHasJumped() {
+		this.hasJumped = !this.hasJumped;
+	}
+	
+	void setYBeforeJump() {
+		this.yBeforeJump = this.y;
+	}
+	
+	void setMaxJumpHeight(int maxJumpHeight) {
+		this.maxJumpHeight = maxJumpHeight;
+	}
+	
+	void setJumpVelocity(float jumpVelocity) {
+		this.jumpVelocity = jumpVelocity;
 	}
 }
