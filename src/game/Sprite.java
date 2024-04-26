@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 
 public class Sprite {
 	protected Image img;
+	protected String imgStr;
 	protected int x, y, dx, dy;
 	protected double width;
 	protected double height;
@@ -43,14 +44,6 @@ public class Sprite {
 		return rectangle1.intersects(rectangle2);
 	}
 
-//	// method that will check for collision of two items
-//	boolean collidesWith(Item rect2)	{
-//		Rectangle2D rectangle1 = this.getBounds();
-//		Rectangle2D rectangle2 = rect2.getBounds();
-//
-//		return rectangle1.intersects(rectangle2);
-//	}
-
 	// method that will return the bounds of an image
 	private Rectangle2D getBounds(){
 		return new Rectangle2D(this.x, this.y, this.width, this.height);
@@ -79,7 +72,11 @@ public class Sprite {
 	int getDy() {
     	return this.dy;
 	}
-
+	
+	String getImgStr() {
+		return this.imgStr;
+	}
+ 
 	// setters
 	void setDX(int dx){
 		this.dx = dx;
@@ -98,5 +95,15 @@ public class Sprite {
 	// setter
 	void setHeight(double val){
 		this.height = val;
+	}
+	
+	// setter
+	void setX(int x){
+		this.x = x;
+	}
+
+	// setter
+	void setY(int y){
+		this.y = y;
 	}
 }
