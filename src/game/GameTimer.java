@@ -18,12 +18,12 @@ public class GameTimer extends AnimationTimer{
 	private Hole hole;
 	private Cheese cheese;
 	private MainMenu menu;
-	
+
 	private ArrayList<Mouse> mice;
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
 
-	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese){
+	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, Platform[] platforms){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -37,6 +37,9 @@ public class GameTimer extends AnimationTimer{
 		mice.add(player);
 		items.add(hole);
 		items.add(cheese);
+		items.add(platforms[0]);
+		items.add(platforms[1]);
+		items.add(platforms[2]);
 
 		//call method to handle mouse click event
 		this.handleKeyPressEvent();
@@ -51,7 +54,7 @@ public class GameTimer extends AnimationTimer{
 		renderItems();
 		renderMice();
 	}
-	
+
 	private void checkCollisions() {
 		if (!this.player.checkWithCheese() && this.player.collidesWith(cheese)) {
 			this.player.setWithCheese();
@@ -59,35 +62,49 @@ public class GameTimer extends AnimationTimer{
 			newCheese.setPlayer(player);
 			this.acquiredCheese.add(newCheese);
 		}
-		
+
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.stop();
 			this.menu.setStage();
 		}
+
+		// check if player collides with any platform from below
+		for (Sprite s : this.items) {
+			// check if sprite is a platform
+			if (s instanceof Platform) {
+				if (this.player.collidesWith(s) && this.player.getY() < s.getY()) {
+					this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+					this.player.setHasJumped();
+					// this.player.setDY(0);
+					// System.out.println("collided with platform from below");
+				}
+			}
+		}
+
 	}
 
 	// method that will render/draw the mice to the canvas
 	private void renderMice() {
-		for (Mouse m : this.mice){ 
+		for (Mouse m : this.mice){
 			m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
 			m.render(this.gc);
 		}
 	}
-	
+
 	// method that will render/draw the mice to the canvas
 	private void renderItems() {
-		for (Sprite s : this.items){ 
+		for (Sprite s : this.items){
 			s.loadImage(s.getImgStr(), Mouse.MOUSE_SIZE);
 			s.render(this.gc);
 		}
-		
+
 		for (Cheese c : this.acquiredCheese) {
 			c.setX(c.getPlayer().getX() + 15);
 			c.setY(c.getPlayer().getY() - Mouse.MOUSE_SIZE/3);
 			c.render(this.gc);
 		}
 	}
-	
+
 	// method that will render/draw the mice to the canvas
 	private void moveMice() {
 		for (Mouse m : this.mice){
@@ -98,33 +115,33 @@ public class GameTimer extends AnimationTimer{
 					} else {
 						m.setImgDirection(Mouse.LEFT);
 					}
-					
+
 					m.x += m.dx * Mouse.MOUSE_SPEED;
 				}
-				
-				if(m.checkHasJumped()) {  
+
+				if(m.checkHasJumped()) {
 					// TODO: edit this to stop sprite if it collides with any platform, not just the ground
 					if (m.getY() >= Mouse.INITIAL_Y && m.getDy() == 1) {
 						m.setHasJumped();
 						m.setDY(0);
 					} else {
 						if (m.getY() <= m.getYBeforeJump()-m.getMaxJumpHeight()){
-							m.setDY(1);	
+							m.setDY(1);
 						}
 						m.y += m.dy * m.getJumpVelocity();
 
 						// increase jump velocity throughout jump
 						m.setJumpVelocity(m.getJumpVelocity() + (float)0.05);
-						
+
 					}
 				}
-				
+
 				else if (m.dy != 0 && !m.checkHasJumped()) {
 					m.setHasJumped();
 					m.setYBeforeJump();
 					m.setMaxJumpHeight(Mouse.MOUSE_SIZE * 2);
 					m.setJumpVelocity(Mouse.MOUSE_SPEED);
-					
+
 					m.y += m.dy * m.getJumpVelocity();
 				}
 			}
@@ -156,7 +173,7 @@ public class GameTimer extends AnimationTimer{
 
 		if(key==KeyCode.D) this.player.setDX(1);
    	}
-	
+
 	// method that will stop the player's movement; set the player's DX and DY to 0
 	private void stopPlayer(KeyCode key){
 		if (key==KeyCode.A || key==KeyCode.D) {
