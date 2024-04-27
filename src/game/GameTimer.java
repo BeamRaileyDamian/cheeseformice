@@ -23,7 +23,7 @@ public class GameTimer extends AnimationTimer{
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
 
-	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, Platform[] platforms){
+	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, Platform[] platforms, Trampoline[] trampolines){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -40,6 +40,7 @@ public class GameTimer extends AnimationTimer{
 		items.add(platforms[0]);
 		items.add(platforms[1]);
 		items.add(platforms[2]);
+		items.add(trampolines[0]);
 
 		//call method to handle mouse click event
 		this.handleKeyPressEvent();
@@ -77,6 +78,20 @@ public class GameTimer extends AnimationTimer{
 					this.player.setHasJumped();
 					// this.player.setDY(0);
 					// System.out.println("collided with platform from below");
+				}
+			}
+		}
+
+		// check if player collides with a trampoline
+		for (Sprite s : this.items) {
+			// check if sprite is a trampoline
+			if (s instanceof Trampoline) {
+				if (this.player.collidesWith(s) && this.player.getY() < s.getY()) {
+					this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+					this.player.setHasJumped();
+					this.player.setDY(-1);
+					this.player.setJumpVelocity(10);
+					// System.out.println("collided with trampoline");
 				}
 			}
 		}
