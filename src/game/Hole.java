@@ -7,8 +7,8 @@ public class Hole extends Sprite{
 	protected GraphicsContext gc;
 	protected String imgStr;
 	
-	public Hole() {
-		super(5, GameStage.WINDOW_HEIGHT - 210);
+	public Hole(int x, int y) {
+		super(x, y);
 		this.imgStr = "assets/hole.png";
 		
 		Canvas canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT); // open canvas with same size as stage

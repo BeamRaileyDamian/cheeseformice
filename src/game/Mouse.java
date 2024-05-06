@@ -5,8 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Mouse extends Sprite{
 	protected GraphicsContext gc;
-	protected String imgDirection;
-	protected int imgNum;
+	protected String imgDirection, name;
+	protected int imgNum, port;
 	protected float jumpVelocity;
 	protected int maxJumpHeight;
 	
@@ -14,7 +14,7 @@ public class Mouse extends Sprite{
 	public final static int MOUSE_SPEED = 4;
 	
 	public final static int INITIAL_X = 50;
-	public final static int INITIAL_Y = GameStage.WINDOW_HEIGHT - 225;
+	public final static int INITIAL_Y = GameStage.WINDOW_HEIGHT - 400;
 
 	public static final String RIGHT = "r";
 	public static final String LEFT = "l";
@@ -32,6 +32,8 @@ public class Mouse extends Sprite{
 		this.withCheese = false;
 		this.maxJumpHeight = MOUSE_SIZE * 2;
 		this.jumpVelocity = MOUSE_SPEED;
+		this.name = "Beam";
+		this.port = 2000;
 		
 		this.hasJumped = false;
 		this.yBeforeJump = INITIAL_Y;
@@ -65,6 +67,14 @@ public class Mouse extends Sprite{
 	float getJumpVelocity() {
 		return this.jumpVelocity;
 	}
+	
+	String getName() {
+		return this.name;
+	}
+	
+	int getPort() {
+		return this.port;
+	}
  	
 	// setters
 	void setImgDirection(String direction) {
@@ -89,5 +99,13 @@ public class Mouse extends Sprite{
 	
 	void setJumpVelocity(float jumpVelocity) {
 		this.jumpVelocity = jumpVelocity;
+	}
+	
+	void setName(String name) {
+		this.name = name;
+	}
+	
+	void setPort(int port) {
+		this.port = port;
 	}
 }
