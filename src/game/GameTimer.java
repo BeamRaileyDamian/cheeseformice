@@ -18,12 +18,13 @@ public class GameTimer extends AnimationTimer{
 	private Hole hole;
 	private Cheese cheese;
 	private MainMenu menu;
+	protected NetworkConnection connection;
 
 	private ArrayList<Mouse> mice;
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
 
-	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, Platform[] platforms, Trampoline[] trampolines){
+	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, GamePlatform[] GamePlatforms, Trampoline[] trampolines, NetworkConnection connection){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -34,12 +35,13 @@ public class GameTimer extends AnimationTimer{
 		this.hole = hole;
 		this.cheese = cheese;
 		this.menu = menu;
+		this.connection = connection;
 		mice.add(player);
 		items.add(hole);
 		items.add(cheese);
-		items.add(platforms[0]);
-		items.add(platforms[1]);
-		items.add(platforms[2]);
+		items.add(GamePlatforms[0]);
+		items.add(GamePlatforms[1]);
+		items.add(GamePlatforms[2]);
 		items.add(trampolines[0]);
 
 		//call method to handle mouse click event
@@ -67,17 +69,22 @@ public class GameTimer extends AnimationTimer{
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.stop();
 			this.menu.setStage();
+			try {
+				this.connection.closeConnection();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		// check if player collides with any platform from below
+		// check if player collides with any GamePlatform from below
 		for (Sprite s : this.items) {
-			// check if sprite is a platform
-			if (s instanceof Platform) {
+			// check if sprite is a GamePlatform
+			if (s instanceof GamePlatform) {
 				if (this.player.collidesWith(s) && this.player.getY() < s.getY()) {
 					this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
 					this.player.setHasJumped();
 					// this.player.setDY(0);
-					// System.out.println("collided with platform from below");
+					// System.out.println("collided with GamePlatform from below");
 				}
 			}
 		}
@@ -135,7 +142,7 @@ public class GameTimer extends AnimationTimer{
 				}
 
 				if(m.checkHasJumped()) {
-					// TODO: edit this to stop sprite if it collides with any platform, not just the ground
+					// TODO: edit this to stop sprite if it collides with any GamePlatform, not just the ground
 					if (m.getY() >= Mouse.INITIAL_Y && m.getDy() == 1) {
 						m.setHasJumped();
 						m.setDY(0);

@@ -3,12 +3,12 @@ package game;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Platform extends Sprite {
+public class GamePlatform extends Sprite {
 	protected GraphicsContext gc;
 	protected String imgStr;
 
     // Constructor
-    public Platform(int xPos, int yPos, int size) {
+    public GamePlatform(int xPos, int yPos, int size) {
     	super(xPos, yPos);
     	this.imgStr = "assets/platform.png";
 
