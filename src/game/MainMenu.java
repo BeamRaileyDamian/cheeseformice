@@ -63,7 +63,7 @@ public class MainMenu {
 			public void handle(MouseEvent e) {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
-					GameStage theGameStage = new GameStage(menu, 1, stage);
+					GameStage theGameStage = new GameStage(menu, 3, stage);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				}
