@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class GameTimer extends AnimationTimer{
 
@@ -18,13 +19,16 @@ public class GameTimer extends AnimationTimer{
 	private Hole hole;
 	private Cheese cheese;
 	private MainMenu menu;
+	private Stage stage;
+	private int currentLevel;
 	protected NetworkConnection connection;
 
 	private ArrayList<Mouse> mice;
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
 
-	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese, GamePlatform[] GamePlatforms, Trampoline[] trampolines, NetworkConnection connection){
+	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese,
+	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Stage stage, int currentLevel, NetworkConnection connection){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -36,13 +40,21 @@ public class GameTimer extends AnimationTimer{
 		this.cheese = cheese;
 		this.menu = menu;
 		this.connection = connection;
+		this.stage = stage;
+		this.currentLevel = currentLevel;
 		mice.add(player);
 		items.add(hole);
 		items.add(cheese);
-		items.add(GamePlatforms[0]);
-		items.add(GamePlatforms[1]);
-		items.add(GamePlatforms[2]);
-		items.add(trampolines[0]);
+
+		for (int i = 0; i < gameplatforms.length; i++) {
+			items.add(gameplatforms[i]);
+		}
+
+		for (int i = 0; i < trampolines.length; i++) {
+			items.add(trampolines[i]);
+		}
+
+		items.add(largeBox);
 
 		//call method to handle mouse click event
 		this.handleKeyPressEvent();
@@ -68,7 +80,10 @@ public class GameTimer extends AnimationTimer{
 
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.stop();
-			this.menu.setStage();
+			// this.menu.setStage();
+			this.player.setWithoutCheese();
+			GameStage theGameStage = new GameStage(menu, this.currentLevel+1, this.stage);
+			this.stage.setScene(theGameStage.getScene());
 			try {
 				this.connection.closeConnection();
 			} catch (Exception e) {
@@ -102,6 +117,27 @@ public class GameTimer extends AnimationTimer{
 				}
 			}
 		}
+
+		// check if player collides with a largeBox
+		// limit player movement to the left and right of the largeBox
+		for (Sprite s : this.items) {
+			// check if sprite is a large box
+			if (s instanceof LargeBox) {
+				if (this.player.collidesWith(s)) {
+					if (this.player.getY() < s.getY()) {
+						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+						this.player.setHasJumped();
+					} else {
+						if (this.player.getX() < s.getX()) {
+							this.player.setX(s.getX() - Mouse.MOUSE_SIZE);
+						} else {
+							this.player.setX((s.getX() + 340) + Mouse.MOUSE_SIZE);
+						}
+					}
+				}
+			}
+		}
+
 
 	}
 
