@@ -1,6 +1,7 @@
 package game;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -8,6 +9,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -42,7 +45,6 @@ public class GameStage{
 	GameStage(MainMenu menu, int level, Stage stage) {
 		this.root = new Group();
 		this.stage = stage;
-
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT); // canvas of background
 		this.gc = canvas.getGraphicsContext2D();
 
@@ -104,7 +106,14 @@ public class GameStage{
 
 			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 		}
+		
+		initChat();
+		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
+		this.gametimer.start();
+	}
 
+	/////////////////////////////////////////////////////////////
+	private void initChat() {
 		messages.setPrefHeight(550);
 		messages.setEditable(false);
 		TextField input = new TextField();
@@ -136,19 +145,25 @@ public class GameStage{
                 root.requestFocus();
             }
         });
-
-		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
-		this.gametimer.start();
-		try {
+        
+        this.scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.C) {
+                input.requestFocus();
+                Platform.runLater(() -> input.clear());
+            }
+        });
+        
+        try {
 			if (isServer) connection.startServer(connection.getPort(), (Server)connection);
 			else connection.startClient(connection.getIP(), connection.getPort());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		Platform.runLater(() -> root.requestFocus());
 	}
-
-	/////////////////////////////////////////////////////////////
+ 	
 	private Server createServer() {
 		return new Server(55555, data -> {
 			Platform.runLater(() -> {
