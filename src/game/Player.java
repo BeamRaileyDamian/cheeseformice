@@ -1,9 +1,10 @@
 package game;
 
 public class Player extends Mouse {
-	Player() {
+	Player(String playerName) {
 		super();
+		this.name = playerName;
 	}
-	
-	
+
+
 }

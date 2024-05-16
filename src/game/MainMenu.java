@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +16,7 @@ public class MainMenu {
 	private Scene scene;
 	private Stage stage;
 	private MainMenu menu;
+	private String playerName;
 
 	public MainMenu(Stage stage) {
 		this.menu = this; // for use inside convenience method
@@ -35,25 +37,39 @@ public class MainMenu {
 		StackPane root = new StackPane(); // root
 
 		VBox vbox = new VBox(); // vbox for buttons
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(15);
+		vbox.setAlignment(Pos.CENTER);
+		vbox.setSpacing(15);
 
-        // sets the button (play) background
-        Image img = new Image("assets/play.png");
-        ImageView view = new ImageView(img);
-        // sets the button (play) size
-        view.setFitHeight(100);
-        view.setPreserveRatio(true);
-        // creates button (play)
-        Button play = new Button();
-        // position of the button (play)
-        play.setTranslateX(0);
-        play.setTranslateY(20);
-        play.setBackground(null);
-        play.setGraphic(view);
-        this.setMouseHandler(play, 1);
+		// sets the button (play) background
+		Image img = new Image("assets/play.png");
+		ImageView view = new ImageView(img);
+		// sets the button (play) size
+		view.setFitHeight(100);
+		view.setPreserveRatio(true);
+		// creates button (play)
+		Button play = new Button();
+		// position of the button (play)
+		play.setTranslateX(0);
+		play.setTranslateY(20);
+		play.setBackground(null);
+		play.setGraphic(view);
+		this.setMouseHandler(play, 1);
 
-		vbox.getChildren().addAll(play);
+		// add input field for player name
+		TextField playerName = new TextField();
+		playerName.setPromptText("Enter your name");
+		playerName.setMaxWidth(200);
+		// position of the input field
+		playerName.setTranslateX(0);
+		playerName.setTranslateY(20);
+
+		// on input of player name, set the player name
+		playerName.setOnKeyReleased(e -> {
+			this.playerName = playerName.getText();
+		});
+
+		// add button to vbox
+		vbox.getChildren().addAll(play, playerName);
 		root.getChildren().addAll(viewbg, vbox);
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 	}
@@ -63,7 +79,7 @@ public class MainMenu {
 			public void handle(MouseEvent e) {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
-					GameStage theGameStage = new GameStage(menu, 1, stage);
+					GameStage theGameStage = new GameStage(menu, 1, stage, playerName);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				}

@@ -29,6 +29,7 @@ public class GameStage{
 	private GameTimer gametimer;
 	private Stage stage;
 	private int currentLevel;
+	private String playerName;
 
 	// NETWORKING
 	private boolean isServer = false;
@@ -42,16 +43,17 @@ public class GameStage{
 
 	private LargeBox largeBox;
 
-	GameStage(MainMenu menu, int level, Stage stage) {
+	GameStage(MainMenu menu, int level, Stage stage, String playerName) {
 		this.root = new Group();
 		this.stage = stage;
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT); // canvas of background
 		this.gc = canvas.getGraphicsContext2D();
+		this.playerName = playerName;
 
 		if (level == 1) {
 			this.currentLevel = 1;
 
-			this.player = new Player(); // declare player
+			this.player = new Player(this.playerName); // declare player
 			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
 			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
 			this.platforms[0] = new GamePlatform(200, GameStage.WINDOW_HEIGHT - 450, 100);
@@ -70,7 +72,7 @@ public class GameStage{
 		} else if (level == 2) {
 			this.currentLevel = 2;
 
-			this.player = new Player(); // declare player
+			this.player = new Player(this.playerName); // declare player
 			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
 			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
 			for (int i = 0; i < platforms.length; i++) {
@@ -89,7 +91,7 @@ public class GameStage{
 		} else if (level == 3) {
 			this.currentLevel = 3;
 
-			this.player = new Player(); // declare player
+			this.player = new Player(this.playerName); // declare player
 			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
 			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 400, Mouse.MOUSE_SIZE);
 			for (int i = 0; i < platforms.length; i++) {
@@ -106,7 +108,7 @@ public class GameStage{
 
 			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 		}
-		
+
 		initChat();
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
 		this.gametimer.start();
@@ -145,25 +147,25 @@ public class GameStage{
                 root.requestFocus();
             }
         });
-        
+
         this.scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.C) {
                 input.requestFocus();
                 Platform.runLater(() -> input.clear());
             }
         });
-        
+
         try {
 			if (isServer) connection.startServer(connection.getPort(), (Server)connection);
 			else connection.startClient(connection.getIP(), connection.getPort());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		Platform.runLater(() -> root.requestFocus());
 	}
- 	
+
 	private Server createServer() {
 		return new Server(55555, data -> {
 			Platform.runLater(() -> {
