@@ -110,7 +110,7 @@ public class GameStage{
 		}
 
 		initChat();
-		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.playerName, this.connection);
+		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
 		this.gametimer.start();
 	}
 

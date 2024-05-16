@@ -21,7 +21,6 @@ public class GameTimer extends AnimationTimer{
 	private MainMenu menu;
 	private Stage stage;
 	private int currentLevel;
-	private String playerName;
 	protected NetworkConnection connection;
 
 	private ArrayList<Mouse> mice;
@@ -29,7 +28,7 @@ public class GameTimer extends AnimationTimer{
 	private ArrayList<Cheese> acquiredCheese;
 
 	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese,
-	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Stage stage, int currentLevel, String playerName, NetworkConnection connection){
+	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Stage stage, int currentLevel, NetworkConnection connection){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -83,7 +82,7 @@ public class GameTimer extends AnimationTimer{
 			this.stop();
 			// this.menu.setStage();
 			this.player.setWithoutCheese();
-			GameStage theGameStage = new GameStage(this.menu, this.currentLevel+1, this.stage, this.playerName);
+			GameStage theGameStage = new GameStage(this.menu, this.currentLevel+1, this.stage, this.player.getName());
 			this.stage.setScene(theGameStage.getScene());
 			try {
 				this.connection.closeConnections();
