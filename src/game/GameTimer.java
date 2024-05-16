@@ -85,7 +85,7 @@ public class GameTimer extends AnimationTimer{
 			GameStage theGameStage = new GameStage(menu, this.currentLevel+1, this.stage);
 			this.stage.setScene(theGameStage.getScene());
 			try {
-				this.connection.closeConnection();
+				this.connection.closeConnections();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

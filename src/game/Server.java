@@ -13,17 +13,17 @@ public class Server extends NetworkConnection{
 	}
 
 	@Override
-	protected boolean isServer() {
+	public boolean isServer() {
 		return true;
 	}
 
 	@Override
-	protected String getIP() {
+	public String getIP() {
 		return null;
 	}
 
 	@Override
-	protected int getPort() {
+	public int getPort() {
 		return port;
 	}
 

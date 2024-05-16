@@ -28,7 +28,7 @@ public class GameStage{
 	private int currentLevel;
 
 	// NETWORKING
-	private boolean isServer = true;
+	private boolean isServer = false;
 	private TextArea messages = new TextArea();
 	private NetworkConnection connection = isServer ? createServer() : createClient();
 
@@ -140,7 +140,9 @@ public class GameStage{
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
 		this.gametimer.start();
 		try {
-			connection.startConnection();
+			if (isServer) connection.startServer(connection.getPort(), (Server)connection);
+			else connection.startClient(connection.getIP(), connection.getPort());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

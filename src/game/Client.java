@@ -15,17 +15,17 @@ public class Client extends NetworkConnection {
 	}
 
 	@Override
-	protected boolean isServer() {
+	public boolean isServer() {
 		return false;
 	}
 
 	@Override
-	protected String getIP() {
+	public String getIP() {
 		return ip;
 	}
 
 	@Override
-	protected int getPort() {
+	public int getPort() {
 		return port;
 	}
 
