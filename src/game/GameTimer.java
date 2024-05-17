@@ -98,19 +98,9 @@ public class GameTimer extends AnimationTimer{
 		}
 
 		for (Sprite s : this.items) {
-			if (this.player.collidesWith(s)) {
-//				if (s instanceof GamePlatform) {
-//					if (this.player.getDy() == -1) {
-//						this.player.setDY(1);
-//						this.player.setY(this.player.getY()+20);
-//					} else if (this.player.getDy() == 1 && (this.player.getY() - Mouse.MOUSE_SIZE) < (s.getY() - 20)) {
-//						this.player.setDY(0);
-//						this.player.setHasJumped();
-//					}
-//				}
-				
-				if (s instanceof GamePlatform && this.player.getY() < s.getY()) {
-					if (this.player.getDy() == -1) {
+			if (this.player.collidesWith(s)) {				
+				if (s instanceof GamePlatform) {
+					if (this.player.getDy() == -1 || this.player.getY() > s.getY()) {
 						this.player.setDY(1);
 					} else {	
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
@@ -120,12 +110,11 @@ public class GameTimer extends AnimationTimer{
 				}
 				
 				else if (s instanceof Trampoline) {
-					if (this.player.getDy() == -1) {
+					if (this.player.getDy() == -1 || this.player.getY() > s.getY()) {
 						this.player.setDY(1);
 					} else if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
 						this.player.setHasJumped();
-						this.player.setMaxJumpHeight(this.player.getMaxJumpHeight() * 2);
 						this.player.setDY(-1);
 						this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 					} 
@@ -198,7 +187,6 @@ public class GameTimer extends AnimationTimer{
 						}
 						m.y += m.dy * m.getJumpVelocity();
 
-						// increase/decrease jump velocity throughout jump
 						if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
 						else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
 					}
@@ -236,8 +224,6 @@ public class GameTimer extends AnimationTimer{
 		if(key==KeyCode.W && !this.player.checkHasJumped()) this.player.setDY(-1);
 
 		if(key==KeyCode.A) this.player.setDX(-1);
-
-		//if(key==KeyCode.S) this.player.setDY(-1);
 
 		if(key==KeyCode.D) this.player.setDX(1);
    	}

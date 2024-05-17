@@ -97,8 +97,8 @@ public class Mouse extends Sprite{
 		this.yBeforeJump = this.y;
 	}
 
-	void setMaxJumpHeight(int maxJumpHeight) {
-		this.maxJumpHeight = maxJumpHeight;
+	void setMaxJumpHeight(int val) {
+		this.maxJumpHeight = val;
 	}
 
 	void setJumpVelocity(float jumpVelocity) {
