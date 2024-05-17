@@ -90,40 +90,48 @@ public class GameTimer extends AnimationTimer{
 				e.printStackTrace();
 			}
 		}
-
-		// check if player collides with any GamePlatform from below
-		for (Sprite s : this.items) {
-			// check if sprite is a GamePlatform
-			if (s instanceof GamePlatform) {
-				if (this.player.collidesWith(s) && this.player.getY() < s.getY()) {
-					this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
-					this.player.setHasJumped();
-					// this.player.setDY(0);
-					// System.out.println("collided with GamePlatform from below");
-				}
-			}
+		
+		if (this.player.checkHasJumped() && this.player.getY() >= GameStage.GROUND) {
+			this.player.setHasJumped();
+			this.player.setY(GameStage.GROUND);
+			this.player.setDY(0);
 		}
 
-		// check if player collides with a trampoline
 		for (Sprite s : this.items) {
-			// check if sprite is a trampoline
-			if (s instanceof Trampoline) {
-				if (this.player.collidesWith(s) && this.player.getY() < s.getY()) {
-					this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
-					this.player.setHasJumped();
-					this.player.setDY(-1);
-					this.player.setJumpVelocity(10);
-					// System.out.println("collided with trampoline");
+			if (this.player.collidesWith(s)) {
+//				if (s instanceof GamePlatform) {
+//					if (this.player.getDy() == -1) {
+//						this.player.setDY(1);
+//						this.player.setY(this.player.getY()+20);
+//					} else if (this.player.getDy() == 1 && (this.player.getY() - Mouse.MOUSE_SIZE) < (s.getY() - 20)) {
+//						this.player.setDY(0);
+//						this.player.setHasJumped();
+//					}
+//				}
+				
+				if (s instanceof GamePlatform && this.player.getY() < s.getY()) {
+					if (this.player.getDy() == -1) {
+						this.player.setDY(1);
+					} else {	
+						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+						this.player.setHasJumped();
+						
+					}
 				}
-			}
-		}
-
-		// check if player collides with a largeBox
-		// limit player movement to the left and right of the largeBox
-		for (Sprite s : this.items) {
-			// check if sprite is a large box
-			if (s instanceof LargeBox) {
-				if (this.player.collidesWith(s)) {
+				
+				else if (s instanceof Trampoline) {
+					if (this.player.getDy() == -1) {
+						this.player.setDY(1);
+					} else if (this.player.getY() < s.getY()) {
+						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+						this.player.setHasJumped();
+						this.player.setMaxJumpHeight(this.player.getMaxJumpHeight() * 2);
+						this.player.setDY(-1);
+						this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
+					} 
+				}
+				
+				else if (s instanceof LargeBox) {
 					if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
 						this.player.setHasJumped();
@@ -137,8 +145,6 @@ public class GameTimer extends AnimationTimer{
 				}
 			}
 		}
-
-
 	}
 
 	// method that will render/draw the mice to the canvas
@@ -182,9 +188,8 @@ public class GameTimer extends AnimationTimer{
 					m.x += m.dx * Mouse.MOUSE_SPEED;
 				}
 
-				if(m.checkHasJumped()) {
-					// TODO: edit this to stop sprite if it collides with any GamePlatform, not just the ground
-					if (m.getY() >= Mouse.INITIAL_Y && m.getDy() == 1) {
+				if(m.checkHasJumped()) {			
+					if (m.getY() >= GameStage.GROUND && m.getDy() == 1) {
 						m.setHasJumped();
 						m.setDY(0);
 					} else {
@@ -193,17 +198,17 @@ public class GameTimer extends AnimationTimer{
 						}
 						m.y += m.dy * m.getJumpVelocity();
 
-						// increase jump velocity throughout jump
-						m.setJumpVelocity(m.getJumpVelocity() + (float)0.05);
-
+						// increase/decrease jump velocity throughout jump
+						if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
+						else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
 					}
 				}
 
 				else if (m.dy != 0 && !m.checkHasJumped()) {
 					m.setHasJumped();
 					m.setYBeforeJump();
-					m.setMaxJumpHeight(Mouse.MOUSE_SIZE * 2);
-					m.setJumpVelocity(Mouse.MOUSE_SPEED);
+					m.setMaxJumpHeight(Mouse.MOUSE_SIZE * 3);
+					m.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 
 					m.y += m.dy * m.getJumpVelocity();
 				}

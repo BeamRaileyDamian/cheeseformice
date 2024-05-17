@@ -24,13 +24,13 @@ public class Mouse extends Sprite{
 	private boolean hasJumped;
 	private int yBeforeJump;
 
-	public Mouse() {
-		super(INITIAL_X, INITIAL_Y);
+	public Mouse(int x, int y) {
+		super(x, y);
 		this.imgStr = "assets/mouse";
 		this.imgDirection = Mouse.RIGHT;
 		this.imgNum = 1;
 		this.withCheese = false;
-		this.maxJumpHeight = MOUSE_SIZE * 2;
+		this.maxJumpHeight = MOUSE_SIZE * 3;
 		this.jumpVelocity = MOUSE_SPEED;
 		this.name = "Beam";
 		this.port = 2000;

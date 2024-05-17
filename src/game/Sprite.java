@@ -24,6 +24,15 @@ public class Sprite {
 	        this.setSize();
 		} catch(Exception e){}
 	}
+	
+	// method to set the object's image
+	protected void loadImage(String str, int width, int height){
+		try{
+			Image img = new Image(str, width, height, false, false);
+			this.img = img;
+	        this.setSize();
+		} catch(Exception e){}
+	}
 
 	// method to set the image to the image view node
 	void render(GraphicsContext gc){
