@@ -44,6 +44,12 @@ public class Sprite {
 		this.width = this.img.getWidth();
 	    this.height = this.img.getHeight();
 	}
+	
+    public void setDimensions(int width, int height) {
+    	this.width = width;
+    	this.height = height;
+    	this.loadImage(this.imgStr, width, height);
+    }
 
 	// method that will check for collision of two sprites
 	boolean collidesWith(Sprite rect2)	{
@@ -113,6 +119,12 @@ public class Sprite {
 
 	// setter
 	void setY(int y){
+		this.y = y;
+	}
+	
+	// setter
+	void setXY(int x, int y){
+		this.x = x;
 		this.y = y;
 	}
 }

@@ -83,16 +83,17 @@ public class GameTimer extends AnimationTimer{
 		}
 
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
-			this.stop();
-			// this.menu.setStage();
 			this.player.setWithoutCheese();
-			GameStage theGameStage = new GameStage(this.menu, this.currentLevel+1, this.stage, this.player.getName(), this.isServer, this.serverIp);
-			this.stage.setScene(theGameStage.getScene());
-			try {
-				this.connection.closeConnections();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			this.gs.setLevel(this.gs.getLevel()+1);
+			//this.stop();
+			// this.menu.setStage();
+			//GameStage theGameStage = new GameStage(this.menu, this.currentLevel+1, this.stage, this.player.getName(), this.isServer, this.serverIp);
+			//this.stage.setScene(theGameStage.getScene());
+//			try {
+//				this.connection.closeConnections();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 		
 		if (this.player.checkHasJumped() && this.player.getY() >= GameStage.GROUND) {

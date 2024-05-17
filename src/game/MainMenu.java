@@ -130,7 +130,7 @@ public class MainMenu {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
 					boolean isServer = comboBox.getValue() == "Server" ? true : false;
-					GameStage theGameStage = new GameStage(menu, 1, stage, playerName, isServer, ipAddress);
+					GameStage theGameStage = new GameStage(menu, stage, playerName, isServer, ipAddress);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				}

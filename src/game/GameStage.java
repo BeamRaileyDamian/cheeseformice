@@ -28,7 +28,7 @@ public class GameStage{
 	private Cheese cheese;
 	private GameTimer gametimer;
 	private Stage stage;
-	private int currentLevel;
+	private int currentLevel = 1;
 	private String playerName;
 
 	// NETWORKING
@@ -44,7 +44,7 @@ public class GameStage{
 
 	private LargeBox largeBox;
 
-	GameStage(MainMenu menu, int level, Stage stage, String playerName, Boolean isServer, String serverIp) {
+	GameStage(MainMenu menu, Stage stage, String playerName, Boolean isServer, String serverIp) {
 		this.root = new Group();
 		this.stage = stage;
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT); // canvas of background
@@ -54,68 +54,62 @@ public class GameStage{
 		this.connection = isServer ? createServer() : createClient();
 		this.serverIp = serverIp;
 
-		if (level == 1) {
-			this.currentLevel = 1;
+		this.player = new Player(Mouse.INITIAL_X, GROUND, this.playerName); // declare player
+		this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
+		this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
+		this.platforms[0] = new GamePlatform(200, GameStage.WINDOW_HEIGHT - 450, 100, 20);
+		this.platforms[1] = new GamePlatform(400, GameStage.WINDOW_HEIGHT - 550, 100, 20);
+		this.platforms[2] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
+		this.platforms[3] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
+		this.platforms[4] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
 
-			this.player = new Player(Mouse.INITIAL_X, GROUND, this.playerName); // declare player
-			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
-			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
-			this.platforms[0] = new GamePlatform(200, GameStage.WINDOW_HEIGHT - 450, 100, 20);
-			this.platforms[1] = new GamePlatform(400, GameStage.WINDOW_HEIGHT - 550, 100, 20);
-			this.platforms[2] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-			this.platforms[3] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-			this.platforms[4] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-
-			for (int i = 0; i < trampolines.length; i++) {
-				this.trampolines[i] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
-			}
-
-			this.largeBox = new LargeBox(0, GameStage.WINDOW_HEIGHT - 0, 0);
-
-			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
-		} else if (level == 2) {
-			this.currentLevel = 2;
-
-			this.player = new Player(Mouse.INITIAL_X, GROUND, this.playerName); // declare player
-			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
-			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
-			for (int i = 0; i < platforms.length; i++) {
-				this.platforms[i] = new GamePlatform(0, GameStage.WINDOW_HEIGHT, 0, 0);
-			}
-			this.trampolines[0] = new Trampoline(200, GameStage.WINDOW_HEIGHT - 450, 100, 20);
-			this.trampolines[1] = new Trampoline(400, GameStage.WINDOW_HEIGHT - 550, 100, 20);
-			this.trampolines[2] = new Trampoline(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-			this.trampolines[3] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
-			this.trampolines[4] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
-			this.trampolines[5] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
-
-			this.largeBox = new LargeBox(0, GameStage.WINDOW_HEIGHT - 0, 0);
-
-			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
-		} else if (level == 3) {
-			this.currentLevel = 3;
-
-			this.player = new Player(Mouse.INITIAL_X, GROUND, this.playerName); // declare player
-			this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
-			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 400, Mouse.MOUSE_SIZE);
-			for (int i = 0; i < platforms.length; i++) {
-				this.platforms[i] = new GamePlatform(0, GameStage.WINDOW_HEIGHT, 0, 0);
-			}
-			this.trampolines[0] = new Trampoline(300, GameStage.WINDOW_HEIGHT - 450, 100, 20);
-			this.trampolines[1] = new Trampoline(100, GameStage.WINDOW_HEIGHT - 550, 100, 20);
-			this.trampolines[2] = new Trampoline(300, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-			this.trampolines[3] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 450, 100, 20);
-			this.trampolines[4] = new Trampoline(1000, GameStage.WINDOW_HEIGHT - 550, 100, 20);
-			this.trampolines[5] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 650, 100, 20);
-
-			this.largeBox = new LargeBox(400, GameStage.WINDOW_HEIGHT - 750, 400);
-
-			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
+		for (int i = 0; i < trampolines.length; i++) {
+			this.trampolines[i] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
 		}
+
+		this.largeBox = new LargeBox(0, GameStage.WINDOW_HEIGHT - 0, 0);
+		this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
+		
+//			this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 400, Mouse.MOUSE_SIZE);
+//			for (int i = 0; i < platforms.length; i++) {
+//				this.platforms[i] = new GamePlatform(0, GameStage.WINDOW_HEIGHT, 0, 0);
+//			}
+//			this.trampolines[0] = new Trampoline(300, GameStage.WINDOW_HEIGHT - 450, 100, 20);
+//			this.trampolines[1] = new Trampoline(100, GameStage.WINDOW_HEIGHT - 550, 100, 20);
+//			this.trampolines[2] = new Trampoline(300, GameStage.WINDOW_HEIGHT - 650, 100, 20);
+//			this.trampolines[3] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 450, 100, 20);
+//			this.trampolines[4] = new Trampoline(1000, GameStage.WINDOW_HEIGHT - 550, 100, 20);
+//			this.trampolines[5] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 650, 100, 20);
+//
+//			this.largeBox = new LargeBox(400, GameStage.WINDOW_HEIGHT - 750, 400);
+//
+//			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
+		
 
 		initChat();
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection, this.isServer, this.serverIp);
 		this.gametimer.start();
+	}
+	
+	public void setLevel(int level) {
+		this.currentLevel = level;
+		if (this.currentLevel == 2) {
+			for (int i = 0; i < platforms.length; i++) {
+				platforms[i].setDimensions(0, 0);
+				platforms[i].setXY(0, GameStage.WINDOW_HEIGHT);
+			}
+			
+			this.trampolines[0].setXY(200, GameStage.WINDOW_HEIGHT - 450);
+			this.trampolines[1].setXY(400, GameStage.WINDOW_HEIGHT - 550);
+			this.trampolines[2].setXY(600, GameStage.WINDOW_HEIGHT - 650);
+			this.trampolines[3].setXY(800, GameStage.WINDOW_HEIGHT - 750);
+			this.trampolines[4].setXY(800, GameStage.WINDOW_HEIGHT - 750);
+			this.trampolines[5].setXY(800, GameStage.WINDOW_HEIGHT - 750);
+		}
+	}
+	
+	public int getLevel() {
+		return this.currentLevel;
 	}
 
 	/////////////////////////////////////////////////////////////
