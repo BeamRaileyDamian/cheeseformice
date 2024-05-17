@@ -32,9 +32,9 @@ public class GameStage{
 	private String playerName;
 
 	// NETWORKING
-	private boolean isServer = false;
+	private boolean isServer;
 	private TextArea messages = new TextArea();
-	private NetworkConnection connection = isServer ? createServer() : createClient();
+	private NetworkConnection connection;
 
 	// Array of GamePlatforms
 	private GamePlatform[] platforms = new GamePlatform[5];
@@ -43,12 +43,14 @@ public class GameStage{
 
 	private LargeBox largeBox;
 
-	GameStage(MainMenu menu, int level, Stage stage, String playerName) {
+	GameStage(MainMenu menu, int level, Stage stage, String playerName, Boolean isServer) {
 		this.root = new Group();
 		this.stage = stage;
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT); // canvas of background
 		this.gc = canvas.getGraphicsContext2D();
 		this.playerName = playerName;
+		this.isServer = isServer;
+		this.connection = isServer ? createServer() : createClient();
 
 		if (level == 1) {
 			this.currentLevel = 1;
@@ -110,7 +112,7 @@ public class GameStage{
 		}
 
 		initChat();
-		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection);
+		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection, this.isServer);
 		this.gametimer.start();
 	}
 

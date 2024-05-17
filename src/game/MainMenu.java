@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +18,7 @@ public class MainMenu {
 	private Stage stage;
 	private MainMenu menu;
 	private String playerName;
+	private int portNum;
 
 	public MainMenu(Stage stage) {
 		this.menu = this; // for use inside convenience method
@@ -53,7 +55,20 @@ public class MainMenu {
 		play.setTranslateY(20);
 		play.setBackground(null);
 		play.setGraphic(view);
-		this.setMouseHandler(play, 1);
+		
+        ComboBox<String> comboBox = new ComboBox<>();
+
+        // Add items to the ComboBox
+        comboBox.getItems().addAll(
+            "Client",
+            "Server"
+        );
+
+        // Set default value
+        comboBox.setValue("Client");
+        comboBox.setTranslateX(530);
+        comboBox.setTranslateY(-500);
+        comboBox.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
 
 		// add input field for player name
 		TextField playerName = new TextField();
@@ -67,19 +82,35 @@ public class MainMenu {
 		playerName.setOnKeyReleased(e -> {
 			this.playerName = playerName.getText();
 		});
+		
+		// add input field for player name
+		TextField port = new TextField();
+		port.setPromptText("Port");
+		port.setMaxWidth(100);
+		// position of the input field
+		port.setTranslateX(400);
+		port.setTranslateY(-405);
+		port.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
 
+		// on input of player name, set the player name
+		port.setOnKeyReleased(e -> {
+			this.portNum = Integer.parseInt(port.getText());
+		});
+
+		this.setMouseHandler(play, 1, comboBox);
 		// add button to vbox
-		vbox.getChildren().addAll(play, playerName);
+		vbox.getChildren().addAll(play, port, playerName, comboBox);
 		root.getChildren().addAll(viewbg, vbox);
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 	}
 
-	private void setMouseHandler(Button b, int num) { // set event handler
+	private void setMouseHandler(Button b, int num, ComboBox<String> comboBox) { // set event handler
 		b.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
-					GameStage theGameStage = new GameStage(menu, 1, stage, playerName);
+					boolean isServer = comboBox.getValue() == "Server" ? true : false;
+					GameStage theGameStage = new GameStage(menu, 1, stage, playerName, isServer);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				}
