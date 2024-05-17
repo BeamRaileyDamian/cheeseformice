@@ -1,5 +1,7 @@
 package game;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,11 +20,19 @@ public class MainMenu {
 	private Stage stage;
 	private MainMenu menu;
 	private String playerName;
-	private int portNum;
+	private String ip;
+	private String thisIp;
 
 	public MainMenu(Stage stage) {
 		this.menu = this; // for use inside convenience method
 		this.stage = stage;
+		
+		try {
+            thisIp = InetAddress.getLocalHost().getHostAddress();
+            // System.out.println("Your IP address: " + thisIp.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
 		stage.setTitle("Cheeseformice"); // set title, icon, make unresizable
 
@@ -66,17 +76,18 @@ public class MainMenu {
 
         // Set default value
         comboBox.setValue("Client");
-        comboBox.setTranslateX(530);
+        comboBox.setTranslateX(350);
         comboBox.setTranslateY(-500);
         comboBox.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
 
 		// add input field for player name
 		TextField playerName = new TextField();
-		playerName.setPromptText("Enter your name");
+		playerName.setPromptText("Player Name");
 		playerName.setMaxWidth(200);
 		// position of the input field
-		playerName.setTranslateX(0);
-		playerName.setTranslateY(20);
+		playerName.setTranslateX(-478);
+		playerName.setTranslateY(-450);
+		playerName.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
 
 		// on input of player name, set the player name
 		playerName.setOnKeyReleased(e -> {
@@ -84,33 +95,42 @@ public class MainMenu {
 		});
 		
 		// add input field for player name
-		TextField port = new TextField();
-		port.setPromptText("Port");
-		port.setMaxWidth(100);
+		TextField ipAddress = new TextField();
+		ipAddress.setPromptText("IP Address of Server:");
+		ipAddress.setMaxWidth(150);
 		// position of the input field
-		port.setTranslateX(400);
-		port.setTranslateY(-405);
-		port.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
+		ipAddress.setTranslateX(500);
+		ipAddress.setTranslateY(-402);
+		ipAddress.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
 
-		// on input of player name, set the player name
-		port.setOnKeyReleased(e -> {
-			this.portNum = Integer.parseInt(port.getText());
+		ipAddress.setOnKeyReleased(e -> {
+			ip = ipAddress.getText();
 		});
+		
+		comboBox.setOnAction(event -> {
+            String selectedValue = comboBox.getValue();
+            if (selectedValue.equals("Server")) {
+            	ipAddress.setText(thisIp);
+            	ipAddress.setEditable(false);
+            } else if (selectedValue.equals("Client")) {
+            	ipAddress.clear();
+            }
+        });
 
-		this.setMouseHandler(play, 1, comboBox);
+		this.setMouseHandler(play, 1, comboBox, ip);
 		// add button to vbox
-		vbox.getChildren().addAll(play, port, playerName, comboBox);
+		vbox.getChildren().addAll(play, ipAddress, playerName, comboBox);
 		root.getChildren().addAll(viewbg, vbox);
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 	}
 
-	private void setMouseHandler(Button b, int num, ComboBox<String> comboBox) { // set event handler
+	private void setMouseHandler(Button b, int num, ComboBox<String> comboBox, String ipAddress) { // set event handler
 		b.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
 					boolean isServer = comboBox.getValue() == "Server" ? true : false;
-					GameStage theGameStage = new GameStage(menu, 1, stage, playerName, isServer);
+					GameStage theGameStage = new GameStage(menu, 1, stage, playerName, isServer, ipAddress);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				}

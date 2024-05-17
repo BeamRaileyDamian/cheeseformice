@@ -33,6 +33,7 @@ public class GameStage{
 
 	// NETWORKING
 	private boolean isServer;
+	private String serverIp;
 	private TextArea messages = new TextArea();
 	private NetworkConnection connection;
 
@@ -43,7 +44,7 @@ public class GameStage{
 
 	private LargeBox largeBox;
 
-	GameStage(MainMenu menu, int level, Stage stage, String playerName, Boolean isServer) {
+	GameStage(MainMenu menu, int level, Stage stage, String playerName, Boolean isServer, String serverIp) {
 		this.root = new Group();
 		this.stage = stage;
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT); // canvas of background
@@ -51,6 +52,7 @@ public class GameStage{
 		this.playerName = playerName;
 		this.isServer = isServer;
 		this.connection = isServer ? createServer() : createClient();
+		this.serverIp = serverIp;
 
 		if (level == 1) {
 			this.currentLevel = 1;
@@ -112,7 +114,7 @@ public class GameStage{
 		}
 
 		initChat();
-		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection, this.isServer);
+		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.stage, this.currentLevel, this.connection, this.isServer, this.serverIp);
 		this.gametimer.start();
 	}
 
@@ -177,7 +179,7 @@ public class GameStage{
 	}
 
 	private Client createClient() {
-		return new Client("127.0.0.1", 55555, data -> {
+		return new Client(this.serverIp, 55555, data -> {
 			Platform.runLater(() -> {
 				messages.appendText(data.toString() + "\n");
 			});
