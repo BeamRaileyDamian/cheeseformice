@@ -84,6 +84,7 @@ public class GameTimer extends AnimationTimer{
 
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.player.setWithoutCheese();
+			this.acquiredCheese.clear();
 			this.gs.setLevel(this.gs.getLevel()+1);
 			//this.stop();
 			// this.menu.setStage();
