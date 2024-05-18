@@ -32,7 +32,6 @@ public class Mouse extends Sprite{
 		this.withCheese = false;
 		this.maxJumpHeight = MOUSE_SIZE * 3;
 		this.jumpVelocity = MOUSE_SPEED;
-		this.name = "Beam";
 		this.port = 2000;
 
 		this.hasJumped = false;
@@ -100,6 +99,10 @@ public class Mouse extends Sprite{
 
 	void setHasJumped() {
 		this.hasJumped = !this.hasJumped;
+	}
+	
+	void setHasJumped(boolean val) {
+		this.hasJumped = val;
 	}
 
 	void setYBeforeJump() {

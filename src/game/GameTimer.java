@@ -75,6 +75,7 @@ public class GameTimer extends AnimationTimer{
 		checkCollisions();
 		renderItems();
 		renderMice();
+		//System.out.println(this.player.getDy());
 	}
 
 	private void checkCollisions() {
@@ -109,12 +110,10 @@ public class GameTimer extends AnimationTimer{
 		for (Sprite s : this.items) {
 			if (this.player.collidesWith(s)) {				
 				if (s instanceof GamePlatform) {
-					if (this.player.getDy() == -1 || this.player.getY() > s.getY()) {
-						this.player.setDY(1);
-					} else {	
+					this.player.setDY(1);
+					if (s.getY() >= this.player.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
-						this.player.setHasJumped();
-						
+						this.player.setHasJumped(false);
 					}
 				}
 				
@@ -192,18 +191,9 @@ public class GameTimer extends AnimationTimer{
 				}
 
 				if(m.checkHasJumped()) {			
-					if (m.getY() >= GameStage.GROUND && m.getDy() == 1) {
-						m.setHasJumped();
-						m.setDY(0);
-					} else {
-						if (m.getY() <= m.getYBeforeJump()-m.getMaxJumpHeight()){
-							m.setDY(1);
-						}
-						m.y += m.dy * m.getJumpVelocity();
-
-						if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
-						else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
-					}
+					m.y += m.dy * m.getJumpVelocity();
+					if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
+					else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
 				}
 
 				else if (m.dy != 0 && !m.checkHasJumped()) {
