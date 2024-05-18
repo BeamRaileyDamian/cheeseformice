@@ -177,7 +177,7 @@ public class GameTimer extends AnimationTimer{
 		for (Mouse m : this.mice){
 			if (this.checkBounds()) {
 				if (m.dx != 0) {
-					if (frameCounter % FRAME_UPDATE_INTERVAL == 0) {
+					if (frameCounter % FRAME_UPDATE_INTERVAL == 0 && !m.checkHasJumped()) {
 						m.setImgNum(((m.getImgNum() + 1) % 6) + 1);
 					}
 					
@@ -235,7 +235,10 @@ public class GameTimer extends AnimationTimer{
 
 	// method that will change dx and dy depending on the key pressed
 	private void movePlayer(KeyCode key) {
-		if(key==KeyCode.W && !this.player.checkHasJumped()) this.player.setDY(-1);
+		if(key==KeyCode.W && !this.player.checkHasJumped()) {
+			this.player.setDY(-1);
+			this.player.setImgNum(4);
+		}
 
 		if(key==KeyCode.A) this.player.setDX(-1);
 
