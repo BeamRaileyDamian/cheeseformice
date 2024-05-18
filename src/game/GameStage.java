@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class GameStage{
 	public static final int WINDOW_HEIGHT = 900;
 	public static final int WINDOW_WIDTH = 1200;
-	public static final int GROUND = GameStage.WINDOW_HEIGHT - 400;
+	public static final int GROUND = GameStage.WINDOW_HEIGHT - 425;
 	private Scene scene;
 	private Group root;
 	private Canvas canvas;
@@ -56,7 +56,7 @@ public class GameStage{
 
 		this.player = new Player(Mouse.INITIAL_X, GROUND, this.playerName); // declare player
 		this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
-		this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Mouse.MOUSE_SIZE);
+		this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Cheese.CHEESE_SIZE);
 		this.platforms[0] = new GamePlatform(200, GameStage.WINDOW_HEIGHT - 450, 100, 20);
 		this.platforms[1] = new GamePlatform(400, GameStage.WINDOW_HEIGHT - 550, 100, 20);
 		this.platforms[2] = new GamePlatform(600, GameStage.WINDOW_HEIGHT - 650, 100, 20);

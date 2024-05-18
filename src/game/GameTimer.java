@@ -28,6 +28,9 @@ public class GameTimer extends AnimationTimer{
 	private ArrayList<Mouse> mice;
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
+	
+	private static final int FRAME_UPDATE_INTERVAL = 7;
+	private int frameCounter = 0;
 
 	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese,
 	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Stage stage, int currentLevel, NetworkConnection connection, boolean isServer, String serverIp){
@@ -174,6 +177,10 @@ public class GameTimer extends AnimationTimer{
 		for (Mouse m : this.mice){
 			if (this.checkBounds()) {
 				if (m.dx != 0) {
+					if (frameCounter % FRAME_UPDATE_INTERVAL == 0) {
+						m.setImgNum(((m.getImgNum() + 1) % 6) + 1);
+					}
+					
 					if (m.dx > 0) {
 						m.setImgDirection(Mouse.RIGHT);
 					} else {
@@ -181,6 +188,7 @@ public class GameTimer extends AnimationTimer{
 					}
 
 					m.x += m.dx * Mouse.MOUSE_SPEED;
+					frameCounter++;
 				}
 
 				if(m.checkHasJumped()) {			
@@ -238,6 +246,7 @@ public class GameTimer extends AnimationTimer{
 	private void stopPlayer(KeyCode key){
 		if (key==KeyCode.A || key==KeyCode.D) {
 			this.player.setDX(0);
+			this.player.setImgNum(3);
 		}
 	}
 

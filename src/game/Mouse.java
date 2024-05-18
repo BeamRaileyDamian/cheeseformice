@@ -10,7 +10,7 @@ public class Mouse extends Sprite{
 	protected float jumpVelocity;
 	protected int maxJumpHeight;
 
-	public final static int MOUSE_SIZE = 60;
+	public final static int MOUSE_SIZE = 80;
 	public final static int MOUSE_SPEED = 4;
 
 	public final static int INITIAL_X = 50;
@@ -28,7 +28,7 @@ public class Mouse extends Sprite{
 		super(x, y);
 		this.imgStr = "assets/mouse";
 		this.imgDirection = Mouse.RIGHT;
-		this.imgNum = 1;
+		this.imgNum = 3;
 		this.withCheese = false;
 		this.maxJumpHeight = MOUSE_SIZE * 3;
 		this.jumpVelocity = MOUSE_SPEED;
@@ -46,6 +46,10 @@ public class Mouse extends Sprite{
 	// getters
 	String getFullImgStr() {
 		return this.imgStr + "_" + this.imgNum + "_" + this.imgDirection + ".png";
+	}
+	
+	int getImgNum() {
+		return this.imgNum;
 	}
 
 	boolean checkHasJumped() {
@@ -80,6 +84,11 @@ public class Mouse extends Sprite{
 	void setImgDirection(String direction) {
 		this.imgDirection = direction;
 	}
+	
+	void setImgNum(int num) {
+		this.imgNum = num;
+	}
+
 
 	void setWithCheese() {
 		this.withCheese = true;
