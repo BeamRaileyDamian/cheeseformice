@@ -133,6 +133,7 @@ public class MainMenu {
             	ipAddress.setText(thisIp);
             	ipAddress.setEditable(false);
             } else if (selectedValue.equals("Client")) {
+            	ipAddress.setEditable(true);
             	ipAddress.clear();
             }
         });
@@ -140,7 +141,6 @@ public class MainMenu {
 		this.setMouseHandler(play, 1, comboBox, ip);
 		this.setMouseHandler(about, 2, comboBox, ip);
 		this.setMouseHandler(exit, 3, comboBox, ip);
-		// add button to vbox
 		vbox.getChildren().addAll(play, about, exit, ipAddress, playerName, comboBox);
 		root.getChildren().addAll(viewbg, vbox);
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);

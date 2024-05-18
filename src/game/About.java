@@ -13,10 +13,8 @@ import javafx.stage.Stage;
 public class About {
 	private Scene scene;
 	private Stage stage;
-	private About menu;
 
 	public About(Stage stage, MainMenu menu) {
-		this.menu = this; // for use inside convenience method
 		this.stage = stage;
 
 		stage.setTitle("About"); // set title, icon, make unresizable
