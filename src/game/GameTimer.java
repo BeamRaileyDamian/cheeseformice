@@ -118,9 +118,10 @@ public class GameTimer extends AnimationTimer{
 				}
 				
 				else if (s instanceof Trampoline) {
-					if (this.player.getDy() == -1 || this.player.getY() > s.getY()) {
+					if (s.getY() < this.player.getY()) {
 						this.player.setDY(1);
 					} else if (this.player.getY() < s.getY()) {
+						this.player.setImgNum(4);
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
 						this.player.setHasJumped(true);
 						this.player.setDY(-1);
