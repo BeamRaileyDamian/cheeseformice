@@ -8,7 +8,6 @@ public class Mouse extends Sprite{
 	protected String imgDirection, name;
 	protected int imgNum, port;
 	protected float jumpVelocity;
-	protected int maxJumpHeight;
 
 	public final static int MOUSE_SIZE = 80;
 	public final static int MOUSE_SPEED = 4;
@@ -20,9 +19,7 @@ public class Mouse extends Sprite{
 	public static final String LEFT = "l";
 
 	private boolean withCheese;
-
 	private boolean hasJumped;
-	private int yBeforeJump;
 
 	public Mouse(int x, int y) {
 		super(x, y);
@@ -30,12 +27,9 @@ public class Mouse extends Sprite{
 		this.imgDirection = Mouse.RIGHT;
 		this.imgNum = 3;
 		this.withCheese = false;
-		this.maxJumpHeight = MOUSE_SIZE * 3;
 		this.jumpVelocity = MOUSE_SPEED;
 		this.port = 2000;
-
 		this.hasJumped = false;
-		this.yBeforeJump = INITIAL_Y;
 
 		Canvas canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT); // open canvas with same size as stage
 		this.gc = canvas.getGraphicsContext2D();
@@ -57,14 +51,6 @@ public class Mouse extends Sprite{
 
 	boolean checkWithCheese() {
 		return this.withCheese;
-	}
-
-	int getYBeforeJump() {
-		return this.yBeforeJump;
-	}
-
-	int getMaxJumpHeight() {
-		return this.maxJumpHeight;
 	}
 
 	float getJumpVelocity() {
@@ -103,14 +89,6 @@ public class Mouse extends Sprite{
 	
 	void setHasJumped(boolean val) {
 		this.hasJumped = val;
-	}
-
-	void setYBeforeJump() {
-		this.yBeforeJump = this.y;
-	}
-
-	void setMaxJumpHeight(int val) {
-		this.maxJumpHeight = val;
 	}
 
 	void setJumpVelocity(float jumpVelocity) {

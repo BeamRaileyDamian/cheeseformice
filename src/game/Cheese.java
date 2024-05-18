@@ -8,7 +8,7 @@ public class Cheese extends Sprite{
 	protected String imgStr;
 	protected Player player;
 	
-	public final static int CHEESE_SIZE = 40;
+	public final static int CHEESE_SIZE = 60;
 	
 	public Cheese(int xPos, int yPos, int size) {
 		super(xPos, yPos);

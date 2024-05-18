@@ -81,7 +81,7 @@ public class GameTimer extends AnimationTimer{
 	private void checkCollisions() {
 		if (!this.player.checkWithCheese() && this.player.collidesWith(cheese)) {
 			this.player.setWithCheese();
-			Cheese newCheese = new Cheese(this.player.x, this.player.y + Mouse.MOUSE_SIZE/2, Mouse.MOUSE_SIZE/2);
+			Cheese newCheese = new Cheese(this.player.x, this.player.y + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
 			newCheese.setPlayer(player);
 			this.acquiredCheese.add(newCheese);
 		}
@@ -122,7 +122,7 @@ public class GameTimer extends AnimationTimer{
 						this.player.setDY(1);
 					} else if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
-						this.player.setHasJumped();
+						this.player.setHasJumped(true);
 						this.player.setDY(-1);
 						this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 					} 
@@ -198,8 +198,6 @@ public class GameTimer extends AnimationTimer{
 
 				else if (m.dy != 0 && !m.checkHasJumped()) {
 					m.setHasJumped();
-					m.setYBeforeJump();
-					m.setMaxJumpHeight(Mouse.MOUSE_SIZE * 3);
 					m.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 
 					m.y += m.dy * m.getJumpVelocity();
