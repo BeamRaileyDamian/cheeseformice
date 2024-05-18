@@ -106,6 +106,7 @@ public class GameTimer extends AnimationTimer{
 			this.player.setY(GameStage.GROUND);
 			this.player.setDY(0);
 			this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
+			this.player.setImgNum(3);
 		}
 
 		for (Sprite s : this.items) {
@@ -135,7 +136,8 @@ public class GameTimer extends AnimationTimer{
 				else if (s instanceof LargeBox) {
 					if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
-						this.player.setHasJumped();
+						this.player.setDY(1);
+						this.player.setHasJumped(false);
 					} else {
 						if (this.player.getX() < s.getX()) {
 							this.player.setX(s.getX() - Mouse.MOUSE_SIZE);
