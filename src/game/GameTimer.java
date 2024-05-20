@@ -33,7 +33,7 @@ public class GameTimer extends AnimationTimer{
 	private int frameCounter = 0;
 
 	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese,
-	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Stage stage, int currentLevel, NetworkConnection connection, boolean isServer, String serverIp){
+	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Land[] lands, Stage stage, int currentLevel, NetworkConnection connection, boolean isServer, String serverIp){
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
@@ -59,6 +59,10 @@ public class GameTimer extends AnimationTimer{
 
 		for (int i = 0; i < trampolines.length; i++) {
 			items.add(trampolines[i]);
+		}
+		
+		for (int i = 0; i < lands.length; i++) {
+			items.add(lands[i]);
 		}
 
 		items.add(largeBox);
@@ -101,9 +105,9 @@ public class GameTimer extends AnimationTimer{
 //			}
 		}
 		
-		if (this.player.checkHasJumped() && this.player.getY() >= GameStage.GROUND) {
+		if (this.player.checkHasJumped() && this.player.getY() >= this.gs.getGround()) {
 			this.player.setHasJumped();
-			this.player.setY(GameStage.GROUND);
+			this.player.setY(this.gs.getGround());
 			this.player.setDY(0);
 			this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 			this.player.setImgNum(3);
@@ -146,6 +150,16 @@ public class GameTimer extends AnimationTimer{
 						}
 					}
 				}
+				
+				else if (s instanceof Land) {
+					if (this.player.getY() < s.getY()) {
+						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
+						this.player.setDY(1);
+						this.player.setHasJumped(false);
+					} else {
+						this.player.setDX(0);
+					}
+				}
 			}
 		}
 	}
@@ -161,7 +175,6 @@ public class GameTimer extends AnimationTimer{
 	// method that will render/draw the mice to the canvas
 	private void renderItems() {
 		for (Sprite s : this.items){
-			s.loadImage(s.getImgStr(), Mouse.MOUSE_SIZE);
 			s.render(this.gc);
 		}
 
