@@ -68,7 +68,7 @@ public class GameStage{
 		for (int i = 0; i < trampolines.length; i++) {
 			this.trampolines[i] = new Trampoline(800, GameStage.WINDOW_HEIGHT - 750, 100, 20);
 		}
-		
+
 		this.lands[0] = new Land(0, GameStage.WINDOW_HEIGHT, 200, 370);
 		this.lands[1] = new Land(0, GameStage.WINDOW_HEIGHT, 10, 370);
 		this.lands[2] = new Land(0, GameStage.WINDOW_HEIGHT, 10, 370);
@@ -76,13 +76,13 @@ public class GameStage{
 		this.lands[4] = new Land(0, GameStage.WINDOW_HEIGHT, 10, 370);
 
 		this.largeBox = new LargeBox(0, GameStage.WINDOW_HEIGHT, 0);
-		this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img	
+		this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 
 		initChat();
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.lands, this.stage, this.currentLevel, this.connection, this.isServer, this.serverIp);
 		this.gametimer.start();
 	}
-	
+
 	public void setLevel(int level) {
 		this.currentLevel = level;
 //		if (this.currentLevel == 2) {
@@ -90,7 +90,7 @@ public class GameStage{
 //				platforms[i].setDimensions(0, 0);
 //				platforms[i].setXY(0, GameStage.WINDOW_HEIGHT);
 //			}
-//			
+//
 //			this.trampolines[0].setXY(200, GameStage.WINDOW_HEIGHT - 450);
 //			this.trampolines[1].setXY(400, GameStage.WINDOW_HEIGHT - 550);
 //			this.trampolines[2].setXY(600, GameStage.WINDOW_HEIGHT - 650);
@@ -98,17 +98,17 @@ public class GameStage{
 //			this.trampolines[4].setXY(800, GameStage.WINDOW_HEIGHT - 750);
 //			this.trampolines[5].setXY(800, GameStage.WINDOW_HEIGHT - 750);
 //		}
-		
-		if (this.currentLevel == 2) {	
-			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img	
+
+		if (this.currentLevel == 2) {
+			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 			this.cheese.setXY(1000, GameStage.WINDOW_HEIGHT - 400);
 			this.largeBox.setXY(400, GameStage.WINDOW_HEIGHT - 750);
 			this.largeBox.setDimensions(400, 400);
-			
+
 			for (int i = 0; i < platforms.length; i++) {
 				platforms[i].setXY(-100, -100);
 			}
-			
+
 			this.trampolines[0].setXY(300, GameStage.WINDOW_HEIGHT - 450);
 			this.trampolines[1].setXY(100, GameStage.WINDOW_HEIGHT - 550);
 			this.trampolines[2].setXY(300, GameStage.WINDOW_HEIGHT - 650);
@@ -116,26 +116,26 @@ public class GameStage{
 			this.trampolines[4].setXY(1000, GameStage.WINDOW_HEIGHT - 550);
 			this.trampolines[5].setXY(800, GameStage.WINDOW_HEIGHT - 650);
 		}
-		
+
 		else if (this.currentLevel == 3) {
-			this.bg = new Image("assets/bg_map_3.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img	
+			this.bg = new Image("assets/bg_map_3.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 			this.largeBox.setXY(-1000, -1000);
 			this.largeBox.setDimensions(0, 0);
-			
+
 			for (int i = 0; i < platforms.length; i++) {
 				platforms[i].setXY(-100, -100);
 			}
-			
+
 			this.trampolines[0].setXY(1070, GameStage.WINDOW_HEIGHT - 220);
 			for (int i = 1; i < trampolines.length; i++) {
 				this.trampolines[i].setXY(-100, -100);
 			}
-			
+
 			this.player.setXY(30, WINDOW_HEIGHT/3 - Mouse.MOUSE_SIZE/2 + 5);
 			this.ground = 2000;
 			this.hole.setXY(30, WINDOW_HEIGHT/3);
 			this.cheese.setXY(1070, WINDOW_HEIGHT/3 + 200);
-			
+
 			this.lands[0].setXY(0, WINDOW_HEIGHT - 560);
 			this.lands[1].setXY(400, WINDOW_HEIGHT - 560);
 			this.lands[2].setXY(600, WINDOW_HEIGHT - 560);
@@ -143,7 +143,7 @@ public class GameStage{
 			this.lands[4].setXY(1000, WINDOW_HEIGHT - 560);
 		}
 	}
-	
+
 	public int getLevel() {
 		return this.currentLevel;
 	}
@@ -229,7 +229,7 @@ public class GameStage{
 	Image getBG() {
 		return this.bg;
 	}
-	
+
 	int getGround() {
 		return this.ground;
 	}

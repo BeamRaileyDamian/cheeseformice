@@ -1,5 +1,6 @@
 package game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
@@ -26,9 +27,10 @@ public class GameTimer extends AnimationTimer{
 	protected NetworkConnection connection;
 
 	private ArrayList<Mouse> mice;
+
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
-	
+
 	private static final int FRAME_UPDATE_INTERVAL = 7;
 	private int frameCounter = 0;
 
@@ -60,7 +62,7 @@ public class GameTimer extends AnimationTimer{
 		for (int i = 0; i < trampolines.length; i++) {
 			items.add(trampolines[i]);
 		}
-		
+
 		for (int i = 0; i < lands.length; i++) {
 			items.add(lands[i]);
 		}
@@ -69,6 +71,19 @@ public class GameTimer extends AnimationTimer{
 
 		//call method to handle mouse click event
 		this.handleKeyPressEvent();
+	}
+
+	public void sendCoordinates() {
+
+		String message = "COORDINATES " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.getDx() + " " + this.player.getName();
+		try {
+			if (frameCounter % 16 == 0) {
+				this.connection.send(message);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -80,6 +95,7 @@ public class GameTimer extends AnimationTimer{
 		renderItems();
 		renderMice();
 		//System.out.println(this.player.getDy());
+		sendCoordinates();
 	}
 
 	private void checkCollisions() {
@@ -104,7 +120,7 @@ public class GameTimer extends AnimationTimer{
 //				e.printStackTrace();
 //			}
 		}
-		
+
 		if (this.player.checkHasJumped() && this.player.getY() >= this.gs.getGround()) {
 			this.player.setHasJumped();
 			this.player.setY(this.gs.getGround());
@@ -114,7 +130,7 @@ public class GameTimer extends AnimationTimer{
 		}
 
 		for (Sprite s : this.items) {
-			if (this.player.collidesWith(s)) {				
+			if (this.player.collidesWith(s)) {
 				if (s instanceof GamePlatform) {
 					this.player.setDY(1);
 					if (s.getY() >= this.player.getY()) {
@@ -123,7 +139,7 @@ public class GameTimer extends AnimationTimer{
 						this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 					}
 				}
-				
+
 				else if (s instanceof Trampoline) {
 					if (s.getY() < this.player.getY()) {
 						this.player.setDY(1);
@@ -134,9 +150,9 @@ public class GameTimer extends AnimationTimer{
 						this.player.setDY(-1);
 						// CHANGE THE NUMBER TO CHANGE INCREMENTS ON VELOCITY THROUGH JUMPS
 						this.player.setJumpVelocity(this.player.getJumpVelocity()*((float)-1.01));
-					} 
+					}
 				}
-				
+
 				else if (s instanceof LargeBox) {
 					if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
@@ -150,7 +166,7 @@ public class GameTimer extends AnimationTimer{
 						}
 					}
 				}
-				
+
 				else if (s instanceof Land) {
 					if (this.player.getY() < s.getY()) {
 						this.player.setY(s.getY() - Mouse.MOUSE_SIZE);
@@ -186,6 +202,7 @@ public class GameTimer extends AnimationTimer{
 
 		// Render the names for each mice above their heads
 		for (Mouse m : this.mice) {
+			// System.out.println(m.getName());
 			this.gc.fillText(m.getName(), m.getX() + 8, m.getY() - 10);
 		}
 	}
@@ -198,7 +215,7 @@ public class GameTimer extends AnimationTimer{
 					if (frameCounter % FRAME_UPDATE_INTERVAL == 0 && !m.checkHasJumped()) {
 						m.setImgNum(((m.getImgNum() + 1) % 6) + 1);
 					}
-					
+
 					if (m.dx > 0) {
 						m.setImgDirection(Mouse.RIGHT);
 					} else {
@@ -209,7 +226,7 @@ public class GameTimer extends AnimationTimer{
 					frameCounter++;
 				}
 
-				if(m.checkHasJumped()) {			
+				if(m.checkHasJumped()) {
 					m.y += m.dy * m.getJumpVelocity();
 					if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
 					else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
@@ -273,5 +290,9 @@ public class GameTimer extends AnimationTimer{
 	// getter
 	Player getPlayer() {
 		return this.player;
+	}
+
+	int getNumOfMice() {
+		return this.mice.size();
 	}
 }
