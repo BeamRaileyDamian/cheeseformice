@@ -74,15 +74,14 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	public void sendCoordinates() {
-
-		String message = "COORDINATES " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.getDx() + " " + this.player.getName();
-		try {
-			if (frameCounter % 16 == 0) {
+		if (this.frameCounter % GameTimer.FRAME_UPDATE_INTERVAL == 0) {			
+			String message = "\\ " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.getDx() + " " + this.player.getName();
+			try {
 				this.connection.send(message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -94,8 +93,7 @@ public class GameTimer extends AnimationTimer{
 		checkCollisions();
 		renderItems();
 		renderMice();
-		//System.out.println(this.player.getDy());
-		sendCoordinates();
+		frameCounter++;
 	}
 
 	private void checkCollisions() {
@@ -223,13 +221,14 @@ public class GameTimer extends AnimationTimer{
 					}
 
 					m.x += m.dx * Mouse.MOUSE_SPEED;
-					frameCounter++;
+					this.sendCoordinates();
 				}
 
 				if(m.checkHasJumped()) {
 					m.y += m.dy * m.getJumpVelocity();
 					if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
 					else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
+					this.sendCoordinates();
 				}
 
 				else if (m.dy != 0 && !m.checkHasJumped()) {
@@ -237,6 +236,7 @@ public class GameTimer extends AnimationTimer{
 					m.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
 
 					m.y += m.dy * m.getJumpVelocity();
+					this.sendCoordinates();
 				}
 			}
 		}

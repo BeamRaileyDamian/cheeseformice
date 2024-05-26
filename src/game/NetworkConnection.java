@@ -128,7 +128,7 @@ public abstract class NetworkConnection {
 
         public void send(Serializable data) throws IOException {
             out.writeObject(data);
-            out.reset();
+//            out.reset();
         }
 
         public void close() throws IOException {
