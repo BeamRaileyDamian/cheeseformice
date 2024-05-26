@@ -16,7 +16,7 @@ public class GameTimer extends AnimationTimer{
 	private GraphicsContext gc;
 	private Scene theScene;
 	private GameStage gs;
-	private Player player;
+	private Mouse player;
 	private Hole hole;
 	private Cheese cheese;
 	private MainMenu menu;
@@ -34,7 +34,7 @@ public class GameTimer extends AnimationTimer{
 	private static final int FRAME_UPDATE_INTERVAL = 7;
 	private int frameCounter = 0;
 
-	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Player player, Hole hole, Cheese cheese,
+	GameTimer(GraphicsContext gc, Scene scene, GameStage gamestage, MainMenu menu, Mouse player, Hole hole, Cheese cheese,
 	GamePlatform[] gameplatforms, Trampoline[] trampolines, LargeBox largeBox, Land[] lands, Stage stage, int currentLevel, NetworkConnection connection, boolean isServer, String serverIp){
 		this.gs = gamestage; // set values
 		this.gc = gc;
@@ -51,7 +51,6 @@ public class GameTimer extends AnimationTimer{
 		this.isServer = isServer;
 		this.serverIp = serverIp;
 		this.currentLevel = currentLevel;
-		mice.add(player);
 		items.add(hole);
 		items.add(cheese);
 
@@ -74,7 +73,7 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	public void sendCoordinates() {
-		if (this.frameCounter % GameTimer.FRAME_UPDATE_INTERVAL == 0) {			
+		if (this.frameCounter % GameTimer.FRAME_UPDATE_INTERVAL == 0) {
 			String message = "\\ " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.getDx() + " " + this.player.getName();
 			try {
 				this.connection.send(message);
@@ -180,6 +179,10 @@ public class GameTimer extends AnimationTimer{
 
 	// method that will render/draw the mice to the canvas
 	private void renderMice() {
+
+		this.player.loadImage(this.player.getFullImgStr(), Mouse.MOUSE_SIZE);
+		this.player.render(this.gc);
+
 		for (Mouse m : this.mice){
 			m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
 			m.render(this.gc);
@@ -203,43 +206,44 @@ public class GameTimer extends AnimationTimer{
 			// System.out.println(m.getName());
 			this.gc.fillText(m.getName(), m.getX() + 8, m.getY() - 10);
 		}
+
+		this.gc.fillText(this.player.getName(), this.player.getX() + 8, this.player.getY() - 10);
 	}
 
 	// method that will render/draw the mice to the canvas
 	private void moveMice() {
-		for (Mouse m : this.mice){
-			if (this.checkBounds()) {
-				if (m.dx != 0) {
-					if (frameCounter % FRAME_UPDATE_INTERVAL == 0 && !m.checkHasJumped()) {
-						m.setImgNum(((m.getImgNum() + 1) % 6) + 1);
-					}
-
-					if (m.dx > 0) {
-						m.setImgDirection(Mouse.RIGHT);
-					} else {
-						m.setImgDirection(Mouse.LEFT);
-					}
-
-					m.x += m.dx * Mouse.MOUSE_SPEED;
-					this.sendCoordinates();
+		if (this.checkBounds()) {
+			if (this.player.dx != 0) {
+				if (frameCounter % FRAME_UPDATE_INTERVAL == 0 && !this.player.checkHasJumped()) {
+					this.player.setImgNum(((this.player.getImgNum() + 1) % 6) + 1);
 				}
 
-				if(m.checkHasJumped()) {
-					m.y += m.dy * m.getJumpVelocity();
-					if (m.getDy() == 1) m.setJumpVelocity(m.getJumpVelocity() + (float)0.2);
-					else m.setJumpVelocity(m.getJumpVelocity() - (float)0.2);
-					this.sendCoordinates();
+				if (this.player.dx > 0) {
+					this.player.setImgDirection(Mouse.RIGHT);
+				} else {
+					this.player.setImgDirection(Mouse.LEFT);
 				}
 
-				else if (m.dy != 0 && !m.checkHasJumped()) {
-					m.setHasJumped();
-					m.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
+				this.player.x += this.player.dx * Mouse.MOUSE_SPEED;
+				this.sendCoordinates();
+			}
 
-					m.y += m.dy * m.getJumpVelocity();
-					this.sendCoordinates();
-				}
+			if(this.player.checkHasJumped()) {
+				this.player.y += this.player.dy * this.player.getJumpVelocity();
+				if (this.player.getDy() == 1) this.player.setJumpVelocity(this.player.getJumpVelocity() + (float)0.2);
+				else this.player.setJumpVelocity(this.player.getJumpVelocity() - (float)0.2);
+				this.sendCoordinates();
+			}
+
+			else if (this.player.dy != 0 && !this.player.checkHasJumped()) {
+				this.player.setHasJumped();
+				this.player.setJumpVelocity(Mouse.MOUSE_SPEED * (float)2);
+
+				this.player.y += this.player.dy * this.player.getJumpVelocity();
+				this.sendCoordinates();
 			}
 		}
+
 	}
 
 	// method that will listen and handle the key press events
@@ -288,7 +292,7 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	// getter
-	Player getPlayer() {
+	Mouse getPlayer() {
 		return this.player;
 	}
 

@@ -22,7 +22,7 @@ public class GameStage{
 	private Canvas canvas;
 	private GraphicsContext gc;
 	private Image bg;
-	private Player player;
+	private Mouse player;
 	private Hole hole;
 	private Cheese cheese;
 	private GameTimer gametimer;
@@ -55,7 +55,7 @@ public class GameStage{
 		this.connection = isServer ? createServer() : createClient();
 		this.serverIp = serverIp;
 
-		this.player = new Player(Mouse.INITIAL_X, this.ground, this.playerName); // declare player
+		this.player = new Mouse(Mouse.INITIAL_X, this.ground, this.playerName); // declare player
 		this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
 		this.cheese = new Cheese(1000, GameStage.WINDOW_HEIGHT - 850, Cheese.CHEESE_SIZE);
 		//this.cheese = new Cheese(10, GameStage.WINDOW_HEIGHT/2, Cheese.CHEESE_SIZE);
@@ -222,7 +222,7 @@ public class GameStage{
 		return this.scene;
 	}
 
-	Player getPlayer() {
+	Mouse getPlayer() {
 		return this.player;
 	}
 

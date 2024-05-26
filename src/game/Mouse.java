@@ -21,7 +21,7 @@ public class Mouse extends Sprite{
 	private boolean withCheese;
 	private boolean hasJumped;
 
-	public Mouse(int x, int y) {
+	public Mouse(int x, int y, String name) {
 		super(x, y);
 		this.imgStr = "assets/mouse";
 		this.imgDirection = Mouse.RIGHT;
@@ -30,6 +30,7 @@ public class Mouse extends Sprite{
 		this.jumpVelocity = MOUSE_SPEED;
 		this.port = 2000;
 		this.hasJumped = false;
+		this.name = name;
 
 		Canvas canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT); // open canvas with same size as stage
 		this.gc = canvas.getGraphicsContext2D();
@@ -40,7 +41,7 @@ public class Mouse extends Sprite{
 	String getFullImgStr() {
 		return this.imgStr + "_" + this.imgNum + "_" + this.imgDirection + ".png";
 	}
-	
+
 	int getImgNum() {
 		return this.imgNum;
 	}
@@ -69,7 +70,7 @@ public class Mouse extends Sprite{
 	void setImgDirection(String direction) {
 		this.imgDirection = direction;
 	}
-	
+
 	void setImgNum(int num) {
 		this.imgNum = num;
 	}
@@ -86,7 +87,7 @@ public class Mouse extends Sprite{
 	void setHasJumped() {
 		this.hasJumped = !this.hasJumped;
 	}
-	
+
 	void setHasJumped(boolean val) {
 		this.hasJumped = val;
 	}
