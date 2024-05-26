@@ -29,7 +29,7 @@ public class GameTimer extends AnimationTimer{
 	// private ArrayList<Mouse> mice;
 
 	private ArrayList<Sprite> items;
-	private ArrayList<Cheese> acquiredCheese;
+	public static ArrayList<Cheese> acquiredCheese;
 
 	private static final int FRAME_UPDATE_INTERVAL = 7;
 	private int frameCounter = 0;
@@ -72,15 +72,15 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	public void sendCoordinates() {
-		if (this.frameCounter % 1 == 0) {
-			String message = "COORD " +  this.player.getName() + " " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.imgDirection + " " + String.valueOf(this.player.checkWithCheese());
+		//if (this.frameCounter % 1 == 0) {
+			String message = "COORD " +  this.player.getName() + " " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.imgDirection;
 			try {
 				this.connection.send(message);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		//}
 	}
 
 	@Override
@@ -100,6 +100,12 @@ public class GameTimer extends AnimationTimer{
 			Cheese newCheese = new Cheese(this.player.x, this.player.y + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
 			newCheese.setPlayer(player);
 			this.acquiredCheese.add(newCheese);
+			try {
+				connection.send("CHEESE " + this.player.getName());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
@@ -277,7 +283,10 @@ public class GameTimer extends AnimationTimer{
 		if (key==KeyCode.A || key==KeyCode.D) {
 			this.player.setDX(0);
 			this.player.setImgNum(3);
+
+			sendCoordinates();
 		}
+
 	}
 
 	private boolean checkBounds() {

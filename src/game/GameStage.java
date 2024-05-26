@@ -219,23 +219,28 @@ public class GameStage{
 					int y = Integer.parseInt(parts[3]);
 					int imgNum = Integer.parseInt(parts[4]);
 					String direction = (parts[5]);
-					boolean withCheese = Boolean.parseBoolean(parts[6]);
 
 					if (mice.containsKey(name)) {
 						mice.get(name).setXY(x, y);
 						mice.get(name).setImgNum(imgNum);
 						mice.get(name).setImgDirection(direction);
-						mice.get(name).setWithCheese(withCheese);
 
 					} else {
 						Mouse newMouse = new Mouse(x, y, name);
 						newMouse.setXY(x, y);
 						newMouse.setImgNum(imgNum);
 						newMouse.setImgDirection(direction);
-						newMouse.setWithCheese(withCheese);
 						mice.put(name, newMouse);
 					}
-				} else {
+				}	else if (string_data.startsWith("CHEESE")){
+					String[] parts = string_data.split(" ");
+					String name = parts[1];
+
+					Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
+					newCheese.setPlayer(mice.get(name));
+					GameTimer.acquiredCheese.add(newCheese);
+				}
+				else {
 					messages.appendText(data.toString() + "\n");
 				}
 			});
@@ -255,23 +260,28 @@ public class GameStage{
 					int y = Integer.parseInt(parts[3]);
 					int imgNum = Integer.parseInt(parts[4]);
 					String direction = (parts[5]);
-					boolean withCheese = Boolean.parseBoolean(parts[6]);
 
 					if (mice.containsKey(name)) {
 						mice.get(name).setXY(x, y);
 						mice.get(name).setImgNum(imgNum);
 						mice.get(name).setImgDirection(direction);
-						mice.get(name).setWithCheese(withCheese);
 
 					} else {
 						Mouse newMouse = new Mouse(x, y, name);
 						newMouse.setXY(x, y);
 						newMouse.setImgNum(imgNum);
 						newMouse.setImgDirection(direction);
-						newMouse.setWithCheese(withCheese);
 						mice.put(name, newMouse);
 					}
-				} else {
+				}	else if (string_data.startsWith("CHEESE")){
+					String[] parts = string_data.split(" ");
+					String name = parts[1];
+
+					Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
+					newCheese.setPlayer(mice.get(name));
+					GameTimer.acquiredCheese.add(newCheese);
+				}
+				else {
 					messages.appendText(data.toString() + "\n");
 				}
 			});
