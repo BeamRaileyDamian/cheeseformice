@@ -80,6 +80,10 @@ public class Mouse extends Sprite{
 		this.withCheese = true;
 	}
 
+	void setWithCheese(boolean val) {
+		this.withCheese = val;
+	}
+
 	void setWithoutCheese() {
 		this.withCheese = false;
 	}

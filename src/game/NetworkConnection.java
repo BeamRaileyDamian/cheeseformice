@@ -23,7 +23,7 @@ public abstract class NetworkConnection {
         this.onReceiveCallback = onReceiveCallback;
     }
 
-    public void startServer(int port, Server server) {
+    public void startServer(int port, Server server, String playerName) {
         new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(port)) {
                 while (true) {
@@ -38,13 +38,14 @@ public abstract class NetworkConnection {
         }).start();
     }
 
-    public void startClient(String ipAddress, int port) {
+    public void startClient(String ipAddress, int port, String playerName) {
         new Thread(() -> {
             try {
                 Socket socket = new Socket(ipAddress, port);
                 ConnectionThread connectionThread = new ConnectionThread(socket);
                 connectionThreads.add(connectionThread);
                 connectionThread.start();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,7 +70,7 @@ public abstract class NetworkConnection {
 
 
 
-            
+
     //  ****************************** UDP METHODS ******************************
 
     public void sendUDP(Serializable data) throws IOException {

@@ -26,7 +26,7 @@ public class GameTimer extends AnimationTimer{
 	private String serverIp;
 	protected NetworkConnection connection;
 
-	private ArrayList<Mouse> mice;
+	// private ArrayList<Mouse> mice;
 
 	private ArrayList<Sprite> items;
 	private ArrayList<Cheese> acquiredCheese;
@@ -39,7 +39,6 @@ public class GameTimer extends AnimationTimer{
 		this.gs = gamestage; // set values
 		this.gc = gc;
 		this.theScene = scene;
-		this.mice = new ArrayList<Mouse>();
 		this.items = new ArrayList<Sprite>();
 		this.acquiredCheese = new ArrayList<Cheese>();
 		this.player = player;
@@ -73,8 +72,8 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	public void sendCoordinates() {
-		if (this.frameCounter % GameTimer.FRAME_UPDATE_INTERVAL == 0) {
-			String message = "\\ " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.getDx() + " " + this.player.getName();
+		if (this.frameCounter % 1 == 0) {
+			String message = "COORD " +  this.player.getName() + " " + this.player.getX() + " " + this.player.getY() + " " + this.player.getImgNum() + " " + this.player.imgDirection + " " + String.valueOf(this.player.checkWithCheese());
 			try {
 				this.connection.send(message);
 			} catch (IOException e) {
@@ -183,7 +182,7 @@ public class GameTimer extends AnimationTimer{
 		this.player.loadImage(this.player.getFullImgStr(), Mouse.MOUSE_SIZE);
 		this.player.render(this.gc);
 
-		for (Mouse m : this.mice){
+		for (Mouse m : GameStage.mice.values()){
 			m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
 			m.render(this.gc);
 		}
@@ -202,7 +201,7 @@ public class GameTimer extends AnimationTimer{
 		}
 
 		// Render the names for each mice above their heads
-		for (Mouse m : this.mice) {
+		for (Mouse m : GameStage.mice.values()) {
 			// System.out.println(m.getName());
 			this.gc.fillText(m.getName(), m.getX() + 8, m.getY() - 10);
 		}
@@ -297,6 +296,6 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	int getNumOfMice() {
-		return this.mice.size();
+		return GameStage.mice.size();
 	}
 }

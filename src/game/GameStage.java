@@ -1,5 +1,7 @@
 package game;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.util.HashMap;
 
 public class GameStage{
 	public static final int WINDOW_HEIGHT = 900;
@@ -42,6 +45,8 @@ public class GameStage{
 	// Array of trampolines
 	private Trampoline[] trampolines = new Trampoline[6];
 	private Land[] lands = new Land[5];
+
+	public static HashMap<String, Mouse> mice = new HashMap<String, Mouse>();
 
 	private LargeBox largeBox;
 
@@ -190,12 +195,13 @@ public class GameStage{
         });
 
         try {
-			if (isServer) connection.startServer(connection.getPort(), (Server)connection);
-			else connection.startClient(connection.getIP(), connection.getPort());
+			if (isServer) connection.startServer(connection.getPort(), (Server)connection, this.playerName);
+			else connection.startClient(connection.getIP(), connection.getPort(), this.playerName);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 
 		Platform.runLater(() -> root.requestFocus());
 	}
@@ -203,7 +209,35 @@ public class GameStage{
 	private Server createServer() {
 		return new Server(55555, data -> {
 			Platform.runLater(() -> {
-				messages.appendText(data.toString() + "\n");
+
+				String string_data = data.toString();
+
+				if(string_data.startsWith("COORD")) {
+					String[] parts = string_data.split(" ");
+					String name = parts[1];
+					int x = Integer.parseInt(parts[2]);
+					int y = Integer.parseInt(parts[3]);
+					int imgNum = Integer.parseInt(parts[4]);
+					String direction = (parts[5]);
+					boolean withCheese = Boolean.parseBoolean(parts[6]);
+
+					if (mice.containsKey(name)) {
+						mice.get(name).setXY(x, y);
+						mice.get(name).setImgNum(imgNum);
+						mice.get(name).setImgDirection(direction);
+						mice.get(name).setWithCheese(withCheese);
+
+					} else {
+						Mouse newMouse = new Mouse(x, y, name);
+						newMouse.setXY(x, y);
+						newMouse.setImgNum(imgNum);
+						newMouse.setImgDirection(direction);
+						newMouse.setWithCheese(withCheese);
+						mice.put(name, newMouse);
+					}
+				} else {
+					messages.appendText(data.toString() + "\n");
+				}
 			});
 		});
 	}
@@ -211,7 +245,35 @@ public class GameStage{
 	private Client createClient() {
 		return new Client(this.serverIp, 55555, data -> {
 			Platform.runLater(() -> {
-				messages.appendText(data.toString() + "\n");
+
+				String string_data = data.toString();
+
+				if(string_data.startsWith("COORD")) {
+					String[] parts = string_data.split(" ");
+					String name = parts[1];
+					int x = Integer.parseInt(parts[2]);
+					int y = Integer.parseInt(parts[3]);
+					int imgNum = Integer.parseInt(parts[4]);
+					String direction = (parts[5]);
+					boolean withCheese = Boolean.parseBoolean(parts[6]);
+
+					if (mice.containsKey(name)) {
+						mice.get(name).setXY(x, y);
+						mice.get(name).setImgNum(imgNum);
+						mice.get(name).setImgDirection(direction);
+						mice.get(name).setWithCheese(withCheese);
+
+					} else {
+						Mouse newMouse = new Mouse(x, y, name);
+						newMouse.setXY(x, y);
+						newMouse.setImgNum(imgNum);
+						newMouse.setImgDirection(direction);
+						newMouse.setWithCheese(withCheese);
+						mice.put(name, newMouse);
+					}
+				} else {
+					messages.appendText(data.toString() + "\n");
+				}
 			});
 		});
 	}
