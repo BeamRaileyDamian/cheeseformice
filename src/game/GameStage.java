@@ -39,7 +39,7 @@ public class GameStage{
 	// NETWORKING
 	private boolean isServer;
 	private String serverIp;
-	private TextArea messages = new TextArea();
+	public static TextArea messages = new TextArea();
 	private NetworkConnection connection;
 
 	// Array of GamePlatforms
@@ -118,6 +118,14 @@ public class GameStage{
 		this.player.setWithCheese(false);
 
 		if (this.currentLevel == 2) {
+
+			this.player.setXY(Mouse.INITIAL_X, this.ground);
+
+			for (Mouse m : mice.values()){
+				m.setXY(Mouse.INITIAL_X, this.ground);
+				m.setImgDirection("r");
+			}
+
 			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 			this.cheese.setXY(1000, GameStage.WINDOW_HEIGHT - 400);
 			this.largeBox.setXY(400, GameStage.WINDOW_HEIGHT - 750);
@@ -153,6 +161,11 @@ public class GameStage{
 			this.ground = 2000;
 			this.hole.setXY(30, WINDOW_HEIGHT/3);
 			this.cheese.setXY(1070, WINDOW_HEIGHT/3 + 200);
+
+			for (Mouse m : mice.values()){
+				m.setXY(30, WINDOW_HEIGHT/3 - Mouse.MOUSE_SIZE/2 + 5);
+				m.setImgDirection("r");
+			}
 
 			this.lands[0].setXY(0, WINDOW_HEIGHT - 560);
 			this.lands[1].setXY(400, WINDOW_HEIGHT - 560);
@@ -256,7 +269,13 @@ public class GameStage{
 			mice.get(name).setWithoutCheese();
 			mice.get(name).setIsVisible(false);
 			mice.get(name).addPoints(GameTimer.RemainingPoints);
-			messages.appendText(name + "Got " + GameTimer.RemainingPoints);
+			for (int i = 0; i < GameTimer.acquiredCheese.size(); i++) {
+				Cheese c = GameTimer.acquiredCheese.get(i);
+
+				if (c.getPlayer().getName().equals(name)) {
+					GameTimer.acquiredCheese.remove(i);
+				}
+			}
 			GameTimer.RemainingPoints -= 25;
 
 			boolean stageDone = !this.player.getIsVisible();
@@ -276,7 +295,7 @@ public class GameStage{
 				this.setLevel(this.getLevel()+1);
 				try {
 					connection.send("DONE");
-					connection.send("Stage is Done");
+					connection.send("Stage is Done\n");
 					messages.appendText("Stage is Done\n");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
