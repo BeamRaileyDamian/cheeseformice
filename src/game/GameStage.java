@@ -88,6 +88,7 @@ public class GameStage{
 
 		initChat();
 		initScoreBoard();
+		updateScoreBoard();
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.lands, this.stage, this.currentLevel, this.connection, this.isServer, this.serverIp);
 		this.gametimer.start();
 	}
@@ -290,6 +291,7 @@ public class GameStage{
 				newMouse.setImgNum(imgNum);
 				newMouse.setImgDirection(direction);
 				mice.put(name, newMouse);
+				updateScoreBoard();
 			}
 		} else if (string_data.startsWith("CHEESE")){
 			String[] parts = string_data.split(" ");
