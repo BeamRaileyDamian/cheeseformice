@@ -115,7 +115,7 @@ public class GameTimer extends AnimationTimer{
 			this.acquiredCheese.clear();
 			// this.gs.setLevel(this.gs.getLevel()+1);
 			this.player.addPoints(RemainingPoints);
-
+			this.gs.updateScoreBoard();
 
 			String enter_hole = "HOLE " + this.player.getName();
 			try {

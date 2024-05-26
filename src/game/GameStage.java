@@ -40,6 +40,7 @@ public class GameStage{
 	private boolean isServer;
 	private String serverIp;
 	public static TextArea messages = new TextArea();
+	public static TextArea scoreboard = new TextArea();
 	private NetworkConnection connection;
 
 	// Array of GamePlatforms
@@ -86,6 +87,7 @@ public class GameStage{
 		this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
 
 		initChat();
+		initScoreBoard();
 		this.gametimer = new GameTimer(this.gc, this.scene, this, menu, this.player, this.hole, this.cheese, this.platforms, this.trampolines, this.largeBox, this.lands, this.stage, this.currentLevel, this.connection, this.isServer, this.serverIp);
 		this.gametimer.start();
 	}
@@ -232,6 +234,42 @@ public class GameStage{
 		Platform.runLater(() -> root.requestFocus());
 	}
 
+	private void initScoreBoard() {
+		// Scoreboard
+		scoreboard.setPrefHeight(550);
+		scoreboard.setEditable(false);
+
+		VBox vbox = new VBox(5, scoreboard);
+		vbox.setPrefSize(590, 185);
+		vbox.setLayoutY(713);
+		vbox.setLayoutX(610);
+
+		this.root.getChildren().addAll(vbox); // add canvas to the root
+
+		// add a header to the scoreboard
+		scoreboard.appendText("Scoreboard\n");
+		scoreboard.setStyle("-fx-font-size: 20px; -fx-font-family: Arial; -fx-font-weight: bold;");
+	}
+
+	// method to update the scoreboard
+	public void updateScoreBoard() {
+		scoreboard.clear();
+		scoreboard.appendText("Scoreboard\n");
+		scoreboard.setStyle("-fx-font-size: 20px; -fx-font-family: Arial; -fx-font-weight: bold;");
+
+		// clone the mice hashmap
+		HashMap<String, Mouse> miceClone = new HashMap<String, Mouse>(GameStage.mice);
+
+		// add to the hashmap clone the player
+		miceClone.put(this.player.getName(), this.player);
+
+		// sort the hashmap by points
+		miceClone.entrySet().stream().sorted((entry1, entry2) -> entry2.getValue().points - entry1.getValue().points)
+				.forEach(entry -> {
+					scoreboard.appendText(entry.getValue().getName() + ": " + entry.getValue().points + "\n");
+				});
+	}
+
 	private void processData(String string_data) {
 		if(string_data.startsWith("COORD")) {
 			String[] parts = string_data.split(" ");
@@ -269,6 +307,7 @@ public class GameStage{
 			mice.get(name).setWithoutCheese();
 			mice.get(name).setIsVisible(false);
 			mice.get(name).addPoints(GameTimer.RemainingPoints);
+			updateScoreBoard();
 			for (int i = 0; i < GameTimer.acquiredCheese.size(); i++) {
 				Cheese c = GameTimer.acquiredCheese.get(i);
 
