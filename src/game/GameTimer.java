@@ -30,6 +30,7 @@ public class GameTimer extends AnimationTimer{
 
 	private ArrayList<Sprite> items;
 	public static ArrayList<Cheese> acquiredCheese;
+	public static int RemainingPoints = 100;
 
 	private static final int FRAME_UPDATE_INTERVAL = 7;
 	private int frameCounter = 0;
@@ -110,8 +111,23 @@ public class GameTimer extends AnimationTimer{
 
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.player.setWithoutCheese();
+			this.player.setIsVisible(false);
 			this.acquiredCheese.clear();
-			this.gs.setLevel(this.gs.getLevel()+1);
+			// this.gs.setLevel(this.gs.getLevel()+1);
+			this.player.addPoints(RemainingPoints);
+
+
+			String enter_hole = "HOLE " + this.player.getName();
+			try {
+				connection.send(enter_hole);
+				connection.send(this.player.getName() + " Gained " + RemainingPoints);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			RemainingPoints -= 25;
+
 			//this.stop();
 			// this.menu.setStage();
 			//GameStage theGameStage = new GameStage(this.menu, this.currentLevel+1, this.stage, this.player.getName(), this.isServer, this.serverIp);
@@ -185,12 +201,16 @@ public class GameTimer extends AnimationTimer{
 	// method that will render/draw the mice to the canvas
 	private void renderMice() {
 
-		this.player.loadImage(this.player.getFullImgStr(), Mouse.MOUSE_SIZE);
-		this.player.render(this.gc);
+		if (this.player.getIsVisible()) {
+			this.player.loadImage(this.player.getFullImgStr(), Mouse.MOUSE_SIZE);
+			this.player.render(this.gc);
+		}
 
 		for (Mouse m : GameStage.mice.values()){
-			m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
-			m.render(this.gc);
+			if (m.getIsVisible()){
+				m.loadImage(m.getFullImgStr(), Mouse.MOUSE_SIZE);
+				m.render(this.gc);
+			}
 		}
 	}
 
@@ -209,10 +229,14 @@ public class GameTimer extends AnimationTimer{
 		// Render the names for each mice above their heads
 		for (Mouse m : GameStage.mice.values()) {
 			// System.out.println(m.getName());
-			this.gc.fillText(m.getName(), m.getX() + 8, m.getY() - 10);
+			if (m.getIsVisible()){
+				this.gc.fillText(m.getName(), m.getX() + 8, m.getY() - 10);
+			}
 		}
 
-		this.gc.fillText(this.player.getName(), this.player.getX() + 8, this.player.getY() - 10);
+		if (this.player.getIsVisible()){
+			this.gc.fillText(this.player.getName(), this.player.getX() + 8, this.player.getY() - 10);
+		}
 	}
 
 	// method that will render/draw the mice to the canvas

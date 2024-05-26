@@ -21,6 +21,9 @@ public class Mouse extends Sprite{
 	private boolean withCheese;
 	private boolean hasJumped;
 
+	protected int points = 0;
+	protected boolean isVisible = true;
+
 	public Mouse(int x, int y, String name) {
 		super(x, y);
 		this.imgStr = "assets/mouse";
@@ -106,5 +109,17 @@ public class Mouse extends Sprite{
 
 	void setPort(int port) {
 		this.port = port;
+	}
+
+	void setIsVisible(boolean val) {
+		this.isVisible = val;
+	}
+
+	boolean getIsVisible(){
+		return this.isVisible;
+	}
+
+	void addPoints(int points) {
+		this.points += points;
 	}
 }

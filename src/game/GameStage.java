@@ -1,6 +1,7 @@
 package game;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -16,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class GameStage{
 	public static final int WINDOW_HEIGHT = 900;
@@ -103,6 +105,17 @@ public class GameStage{
 //			this.trampolines[4].setXY(800, GameStage.WINDOW_HEIGHT - 750);
 //			this.trampolines[5].setXY(800, GameStage.WINDOW_HEIGHT - 750);
 //		}
+
+		// clear all acquired cheese
+		GameTimer.acquiredCheese.clear();
+		GameTimer.RemainingPoints = 100;
+		for (Mouse m : mice.values()) {
+			m.setWithCheese(false);
+			m.setIsVisible(true);
+		}
+
+		this.player.setIsVisible(true);
+		this.player.setWithCheese(false);
 
 		if (this.currentLevel == 2) {
 			this.bg = new Image("assets/bg_map_1.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, true, true); // declare the background img
@@ -206,43 +219,86 @@ public class GameStage{
 		Platform.runLater(() -> root.requestFocus());
 	}
 
+	private void processData(String string_data) {
+		if(string_data.startsWith("COORD")) {
+			String[] parts = string_data.split(" ");
+			String name = parts[1];
+			int x = Integer.parseInt(parts[2]);
+			int y = Integer.parseInt(parts[3]);
+			int imgNum = Integer.parseInt(parts[4]);
+			String direction = (parts[5]);
+
+			if (mice.containsKey(name)) {
+				mice.get(name).setXY(x, y);
+				mice.get(name).setImgNum(imgNum);
+				mice.get(name).setImgDirection(direction);
+
+			} else {
+				Mouse newMouse = new Mouse(x, y, name);
+				newMouse.setXY(x, y);
+				newMouse.setImgNum(imgNum);
+				newMouse.setImgDirection(direction);
+				mice.put(name, newMouse);
+			}
+		} else if (string_data.startsWith("CHEESE")){
+			String[] parts = string_data.split(" ");
+			String name = parts[1];
+
+			Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
+			newCheese.setPlayer(mice.get(name));
+			GameTimer.acquiredCheese.add(newCheese);
+		} else if (string_data.startsWith("HOLE")) {
+			String[] parts = string_data.split(" ");
+			String name = parts[1];
+
+			// System.out.println(name);
+
+			mice.get(name).setWithoutCheese();
+			mice.get(name).setIsVisible(false);
+			mice.get(name).addPoints(GameTimer.RemainingPoints);
+			messages.appendText(name + "Got " + GameTimer.RemainingPoints);
+			GameTimer.RemainingPoints -= 25;
+
+			boolean stageDone = !this.player.getIsVisible();
+
+			for (Mouse m : GameStage.mice.values()) {
+
+				System.out.println(m.getName());
+				System.out.println(m.getIsVisible());
+				if (m.getIsVisible()){
+					System.out.println("VISIBLE PA");
+					stageDone = false;
+					break;
+				}
+			}
+
+			if (stageDone) {
+				this.setLevel(this.getLevel()+1);
+				try {
+					connection.send("DONE");
+					connection.send("Stage is Done");
+					messages.appendText("Stage is Done\n");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		} else if (string_data.equals("DONE")){
+			this.setLevel(this.getLevel()+1);
+		}
+
+		else {
+			messages.appendText(string_data + "\n");
+		}
+	}
+
 	private Server createServer() {
 		return new Server(55555, data -> {
 			Platform.runLater(() -> {
 
 				String string_data = data.toString();
-
-				if(string_data.startsWith("COORD")) {
-					String[] parts = string_data.split(" ");
-					String name = parts[1];
-					int x = Integer.parseInt(parts[2]);
-					int y = Integer.parseInt(parts[3]);
-					int imgNum = Integer.parseInt(parts[4]);
-					String direction = (parts[5]);
-
-					if (mice.containsKey(name)) {
-						mice.get(name).setXY(x, y);
-						mice.get(name).setImgNum(imgNum);
-						mice.get(name).setImgDirection(direction);
-
-					} else {
-						Mouse newMouse = new Mouse(x, y, name);
-						newMouse.setXY(x, y);
-						newMouse.setImgNum(imgNum);
-						newMouse.setImgDirection(direction);
-						mice.put(name, newMouse);
-					}
-				}	else if (string_data.startsWith("CHEESE")){
-					String[] parts = string_data.split(" ");
-					String name = parts[1];
-
-					Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
-					newCheese.setPlayer(mice.get(name));
-					GameTimer.acquiredCheese.add(newCheese);
-				}
-				else {
-					messages.appendText(data.toString() + "\n");
-				}
+				processData(string_data);
 			});
 		});
 	}
@@ -252,38 +308,7 @@ public class GameStage{
 			Platform.runLater(() -> {
 
 				String string_data = data.toString();
-
-				if(string_data.startsWith("COORD")) {
-					String[] parts = string_data.split(" ");
-					String name = parts[1];
-					int x = Integer.parseInt(parts[2]);
-					int y = Integer.parseInt(parts[3]);
-					int imgNum = Integer.parseInt(parts[4]);
-					String direction = (parts[5]);
-
-					if (mice.containsKey(name)) {
-						mice.get(name).setXY(x, y);
-						mice.get(name).setImgNum(imgNum);
-						mice.get(name).setImgDirection(direction);
-
-					} else {
-						Mouse newMouse = new Mouse(x, y, name);
-						newMouse.setXY(x, y);
-						newMouse.setImgNum(imgNum);
-						newMouse.setImgDirection(direction);
-						mice.put(name, newMouse);
-					}
-				}	else if (string_data.startsWith("CHEESE")){
-					String[] parts = string_data.split(" ");
-					String name = parts[1];
-
-					Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
-					newCheese.setPlayer(mice.get(name));
-					GameTimer.acquiredCheese.add(newCheese);
-				}
-				else {
-					messages.appendText(data.toString() + "\n");
-				}
+				processData(string_data);
 			});
 		});
 	}
