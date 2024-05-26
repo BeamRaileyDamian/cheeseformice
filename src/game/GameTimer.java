@@ -119,9 +119,9 @@ public class GameTimer extends AnimationTimer{
 
 			String enter_hole = "HOLE " + this.player.getName();
 			try {
-				connection.send(enter_hole);
-				connection.send(this.player.getName() + " Gained " + RemainingPoints + " points\n");
 				GameStage.messages.appendText(this.player.getName() + " Gained " + RemainingPoints + " points\n");
+				connection.send(this.player.getName() + " Gained " + RemainingPoints + " points");
+				connection.send(enter_hole);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

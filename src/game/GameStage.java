@@ -195,7 +195,7 @@ public class GameStage{
 			try {
 				connection.send(message);
 			} catch (Exception e) {
-				messages.appendText("Failed to send\n");
+				messages.appendText("Failed to send");
 			}
 		});
 
@@ -285,7 +285,7 @@ public class GameStage{
 				System.out.println(m.getName());
 				System.out.println(m.getIsVisible());
 				if (m.getIsVisible()){
-					System.out.println("VISIBLE PA");
+					// System.out.println("VISIBLE PA");
 					stageDone = false;
 					break;
 				}
@@ -294,9 +294,9 @@ public class GameStage{
 			if (stageDone) {
 				this.setLevel(this.getLevel()+1);
 				try {
-					connection.send("DONE");
-					connection.send("Stage is Done\n");
 					messages.appendText("Stage is Done\n");
+					connection.send("DONE");
+//					connection.send("Stage is Done\n");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -304,6 +304,7 @@ public class GameStage{
 			}
 
 		} else if (string_data.equals("DONE")){
+			messages.appendText("Stage is Done\n");
 			this.setLevel(this.getLevel()+1);
 		}
 
