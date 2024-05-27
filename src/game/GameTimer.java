@@ -112,7 +112,15 @@ public class GameTimer extends AnimationTimer{
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.player.setWithoutCheese();
 			this.player.setIsVisible(false);
-			this.acquiredCheese.clear();
+			
+			// remove the cheese of the player from the arraylist of acquired cheese
+			for (int i = 0; i < acquiredCheese.size(); i++) {
+				if (acquiredCheese.get(i).getPlayer().getName().equals(this.player.getName())) {
+					acquiredCheese.remove(i);
+					break;
+				}
+			}
+
 			// this.gs.setLevel(this.gs.getLevel()+1);
 			this.player.addPoints(RemainingPoints);
 			this.gs.updateScoreBoard();
