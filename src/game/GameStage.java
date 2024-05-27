@@ -124,8 +124,6 @@ public class GameStage{
 
 		if (this.currentLevel == 2) {
 
-			this.gameIsOver();
-
 			this.player.setXY(Mouse.INITIAL_X, this.ground);
 
 			for (Mouse m : mice.values()){
@@ -182,8 +180,7 @@ public class GameStage{
 		}
 
 		else if (this.currentLevel == 4) {
-			this.stage.setScene(this.gameOver.getScene());
-			this.stage.show();
+			this.gameIsOver();
 		}
 	}
 

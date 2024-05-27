@@ -205,6 +205,11 @@ public class GameTimer extends AnimationTimer{
 				}
 			}
 		}
+
+		// check if player fell off the screen
+		if (this.player.getY() > GameStage.WINDOW_HEIGHT) {
+			this.player.setIsVisible(false);
+		}
 	}
 
 	// method that will render/draw the mice to the canvas
