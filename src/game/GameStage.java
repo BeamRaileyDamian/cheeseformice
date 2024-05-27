@@ -35,6 +35,7 @@ public class GameStage{
 	private int currentLevel = 1;
 	private int ground = GameStage.WINDOW_HEIGHT - 425;
 	private String playerName;
+	private GameOver gameOver;
 
 	// NETWORKING
 	private boolean isServer;
@@ -62,6 +63,7 @@ public class GameStage{
 		this.isServer = isServer;
 		this.serverIp = serverIp;
 		this.connection = isServer ? createServer() : createClient();
+		this.gameOver = new GameOver(this.stage, menu);
 
 		this.player = new Mouse(Mouse.INITIAL_X, this.ground, this.playerName); // declare player
 		this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole
@@ -122,6 +124,8 @@ public class GameStage{
 
 		if (this.currentLevel == 2) {
 
+			this.gameIsOver();
+
 			this.player.setXY(Mouse.INITIAL_X, this.ground);
 
 			for (Mouse m : mice.values()){
@@ -176,10 +180,30 @@ public class GameStage{
 			this.lands[3].setXY(800, WINDOW_HEIGHT - 560);
 			this.lands[4].setXY(1000, WINDOW_HEIGHT - 560);
 		}
+
+		else if (this.currentLevel == 4) {
+			this.stage.setScene(this.gameOver.getScene());
+			this.stage.show();
+		}
 	}
 
 	public int getLevel() {
 		return this.currentLevel;
+	}
+
+	private void gameIsOver(){
+		try {
+			if (this.isServer) {
+				this.connection.closeConnections();
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		this.gameOver.addMice(player);
+		this.stage.setScene(gameOver.getScene());
 	}
 
 	/////////////////////////////////////////////////////////////
