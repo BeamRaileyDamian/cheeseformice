@@ -34,6 +34,25 @@ public class GameOver {
 		// Add the background image to the root
 		this.root.getChildren().addAll(viewbg);
 
+		// Create a button to go back to the main menu
+		Image backImg = new Image("assets/menu_button.png");
+		ImageView backImgView = new ImageView(backImg);
+		backImgView.setFitHeight(100);
+		backImgView.setPreserveRatio(true);
+		Button back = new Button();
+		back.setTranslateX(0);
+		back.setTranslateY(350);
+		back.setBackground(null);
+		back.setGraphic(backImgView);
+
+		// set the action of the button
+		back.setOnAction(e -> {
+			this.menu.setStage();
+		});
+
+		this.root.getChildren().add(back);
+
+
 		// Set the root as the root of the scene
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 	}
