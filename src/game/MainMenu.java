@@ -122,10 +122,6 @@ public class MainMenu {
 		ipAddress.setTranslateX(500);
 		ipAddress.setTranslateY(-531);
 		ipAddress.setStyle("-fx-font-size: 14px; -fx-border-color: lightblue; -fx-border-width: 2px; -fx-background-color: white;");
-
-		ipAddress.setOnKeyReleased(e -> {
-			ip = ipAddress.getText();
-		});
 		
 		comboBox.setOnAction(event -> {
             String selectedValue = comboBox.getValue();
@@ -138,21 +134,22 @@ public class MainMenu {
             }
         });
 
-		this.setMouseHandler(play, 1, comboBox, ip);
-		this.setMouseHandler(about, 2, comboBox, ip);
-		this.setMouseHandler(exit, 3, comboBox, ip);
+		this.setMouseHandler(play, 1, comboBox, ipAddress);
+		this.setMouseHandler(about, 2, comboBox, ipAddress);
+		this.setMouseHandler(exit, 3, comboBox, ipAddress);
 		vbox.getChildren().addAll(play, about, exit, ipAddress, playerName, comboBox);
 		root.getChildren().addAll(viewbg, vbox);
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 	}
 
-	private void setMouseHandler(Button b, int num, ComboBox<String> comboBox, String ipAddress) { // set event handler
+	private void setMouseHandler(Button b, int num, ComboBox<String> comboBox, TextField ipAddress) { // set event handler
 		b.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				switch(num) { // based on num, branch to a different scene
 				case 1: // new game
+					String ip = ipAddress.getText();
 					boolean isServer = comboBox.getValue() == "Server" ? true : false;
-					GameStage theGameStage = new GameStage(menu, stage, playerName, isServer, ipAddress);
+					GameStage theGameStage = new GameStage(menu, stage, playerName, isServer, ip);
                 	stage.setScene(theGameStage.getScene());
                 	break;
 				case 2:

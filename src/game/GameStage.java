@@ -60,8 +60,8 @@ public class GameStage{
 		this.gc = canvas.getGraphicsContext2D();
 		this.playerName = playerName;
 		this.isServer = isServer;
-		this.connection = isServer ? createServer() : createClient();
 		this.serverIp = serverIp;
+		this.connection = isServer ? createServer() : createClient();
 
 		this.player = new Mouse(Mouse.INITIAL_X, this.ground, this.playerName); // declare player
 		this.hole = new Hole(5, Mouse.INITIAL_Y); // declare hole

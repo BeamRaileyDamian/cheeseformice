@@ -39,6 +39,7 @@ public abstract class NetworkConnection {
     }
 
     public void startClient(String ipAddress, int port, String playerName) {
+    	System.out.println("server's IP: " + ipAddress);
         new Thread(() -> {
             try {
                 Socket socket = new Socket(ipAddress, port);
