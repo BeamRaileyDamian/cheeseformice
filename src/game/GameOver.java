@@ -1,7 +1,7 @@
 package game;
 
-import java.util.HashMap;
 
+import java.util.HashMap;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,74 +13,66 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
+
 public class GameOver {
 	private Scene scene;
 	private Stage stage;
 	private MainMenu menu;
 	private HashMap<String, Mouse> mice = new HashMap<String, Mouse>();
-	private TextArea scoreboard = new TextArea();
 	private StackPane root = new StackPane();
+	private int numOfMicePrinted =  0;
 
-  public GameOver (Stage stage, MainMenu menu){
-    this.stage = stage;
-    this.menu = menu;
+	public GameOver(Stage stage, MainMenu menu) {
+		this.stage = stage;
+		this.menu = menu;
 
-    Image bg = new Image("assets/gameover.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, false, false);
-    ImageView viewbg = new ImageView();
-    viewbg.setImage(bg);
+		Image bg = new Image("assets/gameover.png", GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT, false, false);
+		ImageView viewbg = new ImageView();
+		viewbg.setImage(bg);
 
-    VBox vbox = new VBox();
-    vbox.setAlignment(Pos.CENTER);
-    vbox.setSpacing(15);
+		// Add the background image to the root
+		this.root.getChildren().addAll(viewbg);
 
-    // add the background image to the root
-    this.root.getChildren().add(viewbg);
+		// Set the root as the root of the scene
+		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
+	}
 
-    // set the root  as root of the scene
-    this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
+	// Method to add the list of mouse and their scores to the game over screen
+	public void addMice(Mouse player) {
 
-  }
-
-  // method to add the list of mouse and their scores to the game over screen
-  public void addMice(Mouse player){
-    	// Scoreboard
-		this.scoreboard.setPrefHeight(550);
-		this.scoreboard.setEditable(false);
-
-		VBox vbox = new VBox(5, this.scoreboard);
-		vbox.setPrefSize(590, 185);
-		vbox.setLayoutY(713);
-		vbox.setLayoutX(610);
-
-		this.root.getChildren().addAll(vbox); // add canvas to the root
-
-		// clone the mice hashmap
 		HashMap<String, Mouse> miceClone = new HashMap<String, Mouse>(GameStage.mice);
 
-		// add to the hashmap clone the player
 		miceClone.put(player.getName(), player);
 
-		// sort the hashmap by points
+		// Sort the hashmap by points
 		miceClone.entrySet().stream().sorted((entry1, entry2) -> entry2.getValue().points - entry1.getValue().points)
 				.forEach(entry -> {
-					scoreboard.appendText(entry.getValue().getName() + ": " + entry.getValue().points + "\n");
+					// Create a label with the mouse name and points
+					Label label = new Label(entry.getKey() + " : " + entry.getValue().points);
+					label.setStyle("-fx-font-size: 35px; -fx-text-fill: black; -fx-font-weight: bold;");
+
+					label.setAlignment(Pos.CENTER);
+					label.setTranslateY(50 + this.numOfMicePrinted * 40);
+
+					this.numOfMicePrinted += 1;
+
+					this.root.getChildren().add(label);
 				});
+	}
 
-  }
-
-  	//setter
+	// Setter
 	void setStage() {
 		this.stage.setScene(this.scene);
 	}
 
-	// getter
+	// Getter
 	public Scene getScene() {
 		return this.scene;
 	}
 
-	// getter
+	// Getter
 	Stage getStage() {
 		return this.stage;
 	}
-
 }

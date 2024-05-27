@@ -192,11 +192,11 @@ public class GameStage{
 	}
 
 	private void gameIsOver(){
+		// close the connection
 		try {
-			if (this.isServer) {
+			if (this.isServer){
 				this.connection.closeConnections();
 			}
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
