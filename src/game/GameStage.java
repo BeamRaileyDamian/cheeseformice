@@ -192,6 +192,13 @@ public class GameStage{
 	}
 
 	private void gameIsOver(){
+
+		try {
+			connection.send("GAMEOVER");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// close the connection
 		try {
 			if (this.isServer){
@@ -368,9 +375,15 @@ public class GameStage{
 				}
 			}
 
-		} else if (string_data.equals("DONE")){
+		}
+
+		else if (string_data.equals("DONE")){
 			messages.appendText("Stage is Done\n");
 			this.setLevel(this.getLevel()+1);
+		}
+
+		else if (string_data.equals("GAMEOVER")){
+			this.gameIsOver();
 		}
 
 		else {
