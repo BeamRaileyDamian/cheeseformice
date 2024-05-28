@@ -112,7 +112,7 @@ public class GameTimer extends AnimationTimer{
 		if (this.player.checkWithCheese() && this.player.collidesWith(hole)) {
 			this.player.setWithoutCheese();
 			this.player.setIsVisible(false);
-			
+
 			// remove the cheese of the player from the arraylist of acquired cheese
 			for (int i = 0; i < acquiredCheese.size(); i++) {
 				if (acquiredCheese.get(i).getPlayer().getName().equals(this.player.getName())) {
@@ -208,7 +208,29 @@ public class GameTimer extends AnimationTimer{
 
 		// check if player fell off the screen
 		if (this.player.getY() > GameStage.WINDOW_HEIGHT) {
+
 			this.player.setIsVisible(false);
+
+			// check if all players are now not visible
+			boolean allNotVisible = true;
+			for (Mouse m : GameStage.mice.values()) {
+
+				if (m.getY() <= GameStage.WINDOW_HEIGHT) {
+					allNotVisible = false;
+				}
+			}
+
+			// System.out.println(allNotVisible);
+
+			if (allNotVisible) {
+				this.gs.setLevel(4);
+				try {
+					connection.send("DONE");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

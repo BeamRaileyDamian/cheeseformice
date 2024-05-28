@@ -74,30 +74,30 @@ public abstract class NetworkConnection {
 
     //  ****************************** UDP METHODS ******************************
 
-    public void sendUDP(Serializable data) throws IOException {
-        System.out.println("sendUDP being called");
-        byte[] dataBytes = serialize(data);
-
-        for (ConnectionThread connectionThread : connectionThreads) {
-            InetAddress ipAddress = connectionThread.getSocket().getInetAddress();
-            int port = connectionThread.getSocket().getPort();
-
-            DatagramPacket packet = new DatagramPacket(dataBytes, dataBytes.length, ipAddress, port);
-
-            try (DatagramSocket datagramSocket = new DatagramSocket()) {
-                datagramSocket.send(packet);
-            }
-        }
-    }
-
-    private byte[] serialize(Serializable obj) throws IOException {
-        try (ByteArrayOutputStream b = new ByteArrayOutputStream()) {
-            try (ObjectOutputStream o = new ObjectOutputStream(b)) {
-                o.writeObject(obj);
-            }
-            return b.toByteArray();
-        }
-    }
+//    public void sendUDP(Serializable data) throws IOException {
+//        System.out.println("sendUDP being called");
+//        byte[] dataBytes = serialize(data);
+//
+//        for (ConnectionThread connectionThread : connectionThreads) {
+//            InetAddress ipAddress = connectionThread.getSocket().getInetAddress();
+//            int port = connectionThread.getSocket().getPort();
+//
+//            DatagramPacket packet = new DatagramPacket(dataBytes, dataBytes.length, ipAddress, port);
+//
+//            try (DatagramSocket datagramSocket = new DatagramSocket()) {
+//                datagramSocket.send(packet);
+//            }
+//        }
+//    }
+//
+//    private byte[] serialize(Serializable obj) throws IOException {
+//        try (ByteArrayOutputStream b = new ByteArrayOutputStream()) {
+//            try (ObjectOutputStream o = new ObjectOutputStream(b)) {
+//                o.writeObject(obj);
+//            }
+//            return b.toByteArray();
+//        }
+//    }
 
     //  ****************************** END OF UDP METHODS ******************************
 

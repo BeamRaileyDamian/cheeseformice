@@ -205,9 +205,10 @@ public class GameStage{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		this.gameOver.addMice(player);
 		this.stage.setScene(gameOver.getScene());
+
+		this.gametimer.stop();
 	}
 
 	/////////////////////////////////////////////////////////////
@@ -321,14 +322,18 @@ public class GameStage{
 				mice.put(name, newMouse);
 				updateScoreBoard();
 			}
-		} else if (string_data.startsWith("CHEESE")){
+		}
+
+		else if (string_data.startsWith("CHEESE")){
 			String[] parts = string_data.split(" ");
 			String name = parts[1];
 
 			Cheese newCheese = new Cheese(0, 0 + Mouse.MOUSE_SIZE/2, Cheese.CHEESE_SIZE/2);
 			newCheese.setPlayer(mice.get(name));
 			GameTimer.acquiredCheese.add(newCheese);
-		} else if (string_data.startsWith("HOLE")) {
+		}
+
+		else if (string_data.startsWith("HOLE")) {
 			String[] parts = string_data.split(" ");
 			String name = parts[1];
 
@@ -365,7 +370,7 @@ public class GameStage{
 				try {
 					messages.appendText("Stage is Done\n");
 					connection.send("DONE");
-//					connection.send("Stage is Done\n");
+					// connection.send("Stage is Done\n");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -380,7 +385,7 @@ public class GameStage{
 		}
 
 		else if (string_data.equals("GAMEOVER")){
-			this.gameIsOver();
+			// this.gameIsOver();
 		}
 
 		else {

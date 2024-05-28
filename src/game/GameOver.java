@@ -64,6 +64,8 @@ public class GameOver {
 
 		miceClone.put(player.getName(), player);
 
+		System.out.println(miceClone.size());
+
 		// Sort the hashmap by points
 		miceClone.entrySet().stream().sorted((entry1, entry2) -> entry2.getValue().points - entry1.getValue().points)
 				.forEach(entry -> {
