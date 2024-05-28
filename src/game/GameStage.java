@@ -205,8 +205,13 @@ public class GameStage{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		this.gameOver.addMice(player);
 		this.stage.setScene(gameOver.getScene());
+
+		// clear all the mice and cheese
+		GameStage.mice.clear();
+		GameTimer.acquiredCheese.clear();
 
 		this.gametimer.stop();
 	}
@@ -385,7 +390,7 @@ public class GameStage{
 		}
 
 		else if (string_data.equals("GAMEOVER")){
-			// this.gameIsOver();
+			this.gameIsOver();
 		}
 
 		else {
