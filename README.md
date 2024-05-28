@@ -21,3 +21,6 @@ One of the players must act as the server, which can be done by choosing "Server
 The other players, which must choose "Client", will input the IP address of the server. The server can then start the game, and the clients can follow.
 
 The bottom-left portion of the screen is dedicated to the chat system while the bottom-right displays the scoreboard.
+
+![image](https://github.com/BeamRaileyDamian/cheeseformice/assets/125461358/4fee8690-398d-4519-8284-1b52b8809f3e)
+![image](https://github.com/BeamRaileyDamian/cheeseformice/assets/125461358/d32d83a0-9786-4332-95f3-1616fc544413)
